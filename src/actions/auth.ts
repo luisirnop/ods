@@ -14,7 +14,7 @@ const SignUpSchema = LoginSchema.extend({
   name: z.string().min(2, 'Nome deve ter no mínimo 2 caracteres'),
 })
 
-export async function login(formData: FormData) {
+export async function login(_prevState: unknown, formData: FormData) {
   const parsed = LoginSchema.safeParse(Object.fromEntries(formData))
   if (!parsed.success) return { error: parsed.error.flatten().fieldErrors }
 
@@ -27,7 +27,7 @@ export async function login(formData: FormData) {
   redirect('/')
 }
 
-export async function signUp(formData: FormData) {
+export async function signUp(_prevState: unknown, formData: FormData) {
   const parsed = SignUpSchema.safeParse(Object.fromEntries(formData))
   if (!parsed.success) return { error: parsed.error.flatten().fieldErrors }
 

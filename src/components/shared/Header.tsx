@@ -1,10 +1,25 @@
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
+import { logout } from '@/actions/auth'
 
-export default function Header() {
+export default async function Header() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  let profile = null
+  if (user) {
+    const { data } = await supabase
+      .from('profiles')
+      .select('display_name, username')
+      .eq('id', user.id)
+      .single()
+    profile = data
+  }
+
   return (
     <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
       <div className="container mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-bold text-lg">
+        <Link href="/" className="flex items-center gap-1 font-bold text-lg">
           <span className="text-green-500">Odds</span>
           <span>BR</span>
         </Link>
@@ -19,24 +34,42 @@ export default function Header() {
           <Link href="/ranking" className="text-muted-foreground hover:text-foreground transition-colors">
             Ranking
           </Link>
-          <Link href="/noticias" className="text-muted-foreground hover:text-foreground transition-colors">
-            Notícias
-          </Link>
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link
-            href="/login"
-            className="inline-flex h-7 items-center rounded-lg px-2.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-          >
-            Entrar
-          </Link>
-          <Link
-            href="/cadastro"
-            className="inline-flex h-7 items-center rounded-lg bg-primary px-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/80 transition-colors"
-          >
-            Cadastrar
-          </Link>
+          {user ? (
+            <>
+              <Link
+                href="/perfil"
+                className="inline-flex h-8 items-center rounded-lg px-3 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+              >
+                {profile?.display_name ?? user.email?.split('@')[0]}
+              </Link>
+              <form action={logout}>
+                <button
+                  type="submit"
+                  className="inline-flex h-8 items-center rounded-lg border px-3 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                >
+                  Sair
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="inline-flex h-8 items-center rounded-lg px-3 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+              >
+                Entrar
+              </Link>
+              <Link
+                href="/cadastro"
+                className="inline-flex h-8 items-center rounded-lg bg-green-500 hover:bg-green-600 text-white px-3 text-sm font-semibold transition-colors"
+              >
+                Cadastrar
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
