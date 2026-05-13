@@ -1,0 +1,55 @@
+import type { OddsGame } from '@/types'
+
+const ODDS_API_BASE = 'https://api.the-odds-api.com/v4'
+
+export const SPORTS = {
+  BRASILEIRAO_A: 'soccer_brazil_campeonato',
+  COPA_BRASIL: 'soccer_brazil_copa_do_brasil',
+  LIBERTADORES: 'soccer_conmebol_libertadores',
+  PREMIER_LEAGUE: 'soccer_epl',
+  CHAMPIONS_LEAGUE: 'soccer_uefa_champs_league',
+} as const
+
+export type SportKey = (typeof SPORTS)[keyof typeof SPORTS]
+
+export async function getOdds(sport: SportKey = SPORTS.BRASILEIRAO_A): Promise<OddsGame[]> {
+  const apiKey = process.env.THE_ODDS_API_KEY
+  if (!apiKey) throw new Error('THE_ODDS_API_KEY não configurada')
+
+  const url = new URL(`${ODDS_API_BASE}/sports/${sport}/odds`)
+  url.searchParams.set('apiKey', apiKey)
+  url.searchParams.set('regions', 'br,eu')
+  url.searchParams.set('markets', 'h2h,totals,btts')
+  url.searchParams.set('oddsFormat', 'decimal')
+
+  const response = await fetch(url.toString(), {
+    next: { revalidate: 300 },
+  })
+
+  if (!response.ok) {
+    throw new Error(`Odds API error: ${response.statusText}`)
+  }
+
+  return response.json()
+}
+
+export function getBestOdds(game: OddsGame, market: 'h2h' | 'totals' = 'h2h') {
+  const allOutcomes: Record<string, { price: number; bookmaker: string }[]> = {}
+
+  for (const bookmaker of game.bookmakers) {
+    const mkt = bookmaker.markets.find((m) => m.key === market)
+    if (!mkt) continue
+
+    for (const outcome of mkt.outcomes) {
+      if (!allOutcomes[outcome.name]) allOutcomes[outcome.name] = []
+      allOutcomes[outcome.name].push({ price: outcome.price, bookmaker: bookmaker.key })
+    }
+  }
+
+  const best: Record<string, { price: number; bookmaker: string }> = {}
+  for (const [name, prices] of Object.entries(allOutcomes)) {
+    best[name] = prices.reduce((a, b) => (a.price >= b.price ? a : b))
+  }
+
+  return best
+}

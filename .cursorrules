@@ -1,0 +1,254 @@
+# .cursorrules — Regras para o Cursor / Claude Code
+
+## Contexto do projeto
+
+Este é o projeto **OddsBR** — site brasileiro de comparação de odds em tempo real, comunidade de palpites e conteúdo automatizado sobre futebol. O objetivo é monetização via afiliados de casas de apostas licenciadas no Brasil.
+
+**LEIA SEMPRE antes de qualquer implementação:**
+- `CONTEXT.md` — contexto completo do negócio, banco de dados, APIs e regras
+- `ROADMAP.md` — fases e prioridades de implementação
+- `README.md` — estrutura de pastas e stack técnica
+
+---
+
+## Stack obrigatória
+
+- **Next.js 15** com App Router (nunca Pages Router)
+- **TypeScript** estrito — sem `any`, sem `// @ts-ignore`
+- **Tailwind CSS 4** para estilos
+- **shadcn/ui** para componentes base
+- **Supabase** para banco de dados e auth (nunca outro banco)
+- **Server Actions** para mutações (nunca API routes para forms)
+- **Server Components** por padrão — só `"use client"` quando necessário
+
+---
+
+## Regras de código
+
+### Geral
+- Sempre usar TypeScript com tipagem explícita
+- Nunca usar `var` — sempre `const` ou `let`
+- Funções assíncronas sempre com `async/await`, nunca `.then().catch()`
+- Imports organizados: externos primeiro, internos depois, com linha em branco separando
+- Nomes em inglês para código, comentários podem ser em português
+
+### Next.js App Router
+- Layouts compartilhados em `layout.tsx` de cada segmento
+- Metadata dinâmica via `generateMetadata()` em todas as páginas de conteúdo
+- `loading.tsx` em todas as rotas com dados externos
+- `error.tsx` em todas as rotas com dados externos
+- Nunca usar `getServerSideProps` ou `getStaticProps` (são do Pages Router)
+- Revalidação via `revalidatePath()` após mutações
+
+### Server vs Client Components
+```typescript
+// ✅ Correto — componente servidor (padrão)
+export default async function Page() {
+  const data = await fetchData()
+  return <Component data={data} />
+}
+
+// ✅ Correto — client só quando precisa de estado/eventos
+"use client"
+export default function InteractiveComponent() {
+  const [value, setValue] = useState("")
+  ...
+}
+
+// ❌ Errado — não buscar dados no cliente sem necessidade
+"use client"
+export default function Page() {
+  const [data, setData] = useState(null)
+  useEffect(() => { fetch('/api/data').then(...) }, [])
+}
+```
+
+### Supabase
+- Sempre usar `getAdminClient()` em Server Actions (não no cliente)
+- Nunca expor `SUPABASE_SERVICE_ROLE_KEY` ao browser
+- RLS deve estar ativo em todas as tabelas
+- Usar `anon` key apenas para operações públicas de leitura
+- Tratar todos os erros do Supabase explicitamente
+
+```typescript
+// ✅ Correto
+const { data, error } = await supabase.from('predictions').select('*')
+if (error) throw new Error(`Erro ao buscar palpites: ${error.message}`)
+
+// ❌ Errado — ignorar erro
+const { data } = await supabase.from('predictions').select('*')
+```
+
+### Server Actions
+```typescript
+// ✅ Correto — Server Action com validação
+"use server"
+export async function createPrediction(formData: FormData) {
+  const user = await getUser()
+  if (!user) return { error: "Não autorizado" }
+  
+  const parsed = PredictionSchema.safeParse(Object.fromEntries(formData))
+  if (!parsed.success) return { error: parsed.error.flatten() }
+  
+  const { error } = await supabase.from('predictions').insert(parsed.data)
+  if (error) return { error: error.message }
+  
+  revalidatePath('/palpites')
+  return { success: true }
+}
+```
+
+### APIs externas
+- Sempre cachear respostas da The Odds API (mínimo 5 minutos)
+- Nunca chamar APIs externas diretamente do cliente
+- Usar proxy via Route Handler (`app/api/...`) para esconder API keys
+- Tratar rate limits e erros de rede com retry e fallback
+
+### Links de afiliados
+- **NUNCA hardcodar links de afiliados no JSX**
+- Sempre usar a função `getAffiliateLink(bookmaker, page)` de `src/lib/affiliates.ts`
+- Todo link de afiliado deve ter `target="_blank" rel="noopener noreferrer nofollow"`
+- Adicionar tracking de clique antes de redirecionar
+
+```typescript
+// ✅ Correto
+import { getAffiliateLink } from '@/lib/affiliates'
+<a href={getAffiliateLink('betano', 'odds-table')} target="_blank" rel="noopener noreferrer nofollow">
+  Apostar na Betano
+</a>
+
+// ❌ Errado
+<a href="https://betano.com/?ref=abc123">Apostar</a>
+```
+
+---
+
+## Regras de UI/UX
+
+### Mobile first
+- Todo componente deve funcionar bem em 375px de largura
+- Tabela de odds: scroll horizontal em mobile, nunca quebrar layout
+- CTAs ("Apostar") sempre visíveis sem scroll em mobile
+
+### Cores semânticas de odds
+```typescript
+// Verde = melhor odd do mercado
+// Cinza = odd normal
+// Vermelho = odd mais baixa
+const oddClass = isBest ? 'bg-green-500/10 text-green-600 font-bold border border-green-500/20' 
+                        : 'text-muted-foreground'
+```
+
+### Componentes obrigatórios em toda página pública
+```tsx
+// Footer com aviso legal (OBRIGATÓRIO em todas as páginas)
+<footer>
+  <p className="text-xs text-muted-foreground">
+    Jogue com responsabilidade. Apostas são exclusivas para maiores de 18 anos. 
+    Este site contém links de afiliados. As odds podem variar. 
+    Apostar envolve risco de perda financeira.
+  </p>
+</footer>
+```
+
+### Loading states
+- Todo dado assíncrono deve ter skeleton loader
+- Nunca mostrar layout quebrado durante carregamento
+- Usar `Suspense` com fallback de skeleton
+
+---
+
+## Estrutura de arquivos — convenções
+
+```
+src/
+  app/
+    (public)/          # Parênteses = grupo de rotas (não aparece na URL)
+    (auth)/
+    (dashboard)/
+    api/               # Route Handlers
+  components/
+    ui/                # shadcn/ui — não modificar diretamente
+    odds/              # Componentes do domínio de odds
+    predictions/       # Componentes de palpites
+    ranking/           # Leaderboard, badges
+    shared/            # Componentes compartilhados (Header, Footer, etc.)
+  lib/
+    odds-api.ts        # Clientes de API
+    football-api.ts
+    affiliates.ts      # Links afiliados
+    gamification.ts    # Lógica de pontos e badges
+    supabase/
+      client.ts        # Browser client
+      server.ts        # Server client (cookies)
+      admin.ts         # Admin client (service role)
+  actions/             # Server Actions
+  types/               # TypeScript types e interfaces
+  hooks/               # Custom React hooks (client-side)
+```
+
+---
+
+## Checklist antes de criar qualquer página
+
+1. [ ] A página precisa de dados externos? → usar Server Component + `loading.tsx`
+2. [ ] Tem links de afiliados? → usar `getAffiliateLink()`, nunca hardcodar
+3. [ ] É página pública? → incluir footer com aviso legal
+4. [ ] Tem metadata para SEO? → implementar `generateMetadata()`
+5. [ ] Funciona em mobile (375px)? → testar responsividade
+6. [ ] Tem estados de erro? → implementar `error.tsx`
+7. [ ] Dados são de usuário logado? → verificar auth antes de qualquer query
+
+---
+
+## Variáveis de ambiente — referência rápida
+
+```bash
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL            # URL do projeto (público)
+NEXT_PUBLIC_SUPABASE_ANON_KEY       # Chave anônima (público)
+SUPABASE_SERVICE_ROLE_KEY           # Chave admin (NUNCA expor ao browser)
+
+# APIs externas (NUNCA expor ao browser)
+THE_ODDS_API_KEY
+API_FOOTBALL_KEY
+GEMINI_API_KEY
+TELEGRAM_BOT_TOKEN
+
+# Site
+NEXT_PUBLIC_SITE_URL                # https://oddsbr.com.br
+
+# Stripe (fase 5)
+STRIPE_SECRET_KEY
+STRIPE_WEBHOOK_SECRET
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+```
+
+---
+
+## Prioridades de implementação
+
+Sempre implementar nesta ordem quando em dúvida:
+1. Funcionalidade core (comparador de odds)
+2. Links afiliados (monetização)
+3. Auth e perfil de usuário
+4. Palpites e ranking
+5. Alertas e Telegram
+6. Conteúdo e SEO
+7. Premium e value bets
+
+**Não pular fases** — cada fase depende da anterior.
+
+---
+
+## O que NÃO fazer
+
+- ❌ Não criar endpoint de apostas (o site NÃO opera apostas)
+- ❌ Não prometer lucro ao usuário ("ganhe dinheiro fácil")
+- ❌ Não copiar conteúdo de outros sites
+- ❌ Não armazenar dados de pagamento (usar Stripe)
+- ❌ Não hardcodar links de afiliados
+- ❌ Não usar Pages Router
+- ❌ Não usar `any` no TypeScript
+- ❌ Não fazer fetch de APIs externas no cliente
+- ❌ Não expor service role key ao browser
