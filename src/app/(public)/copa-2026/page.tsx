@@ -80,6 +80,37 @@ export default async function Copa2026Page() {
         </Link>
       </div>
 
+      {/* Cards secundários */}
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Link
+          href="/copa-2026/selecoes"
+          className="group rounded-2xl border bg-card hover:border-green-500/30 p-6 space-y-3 transition-colors"
+        >
+          <div className="text-3xl">🌍</div>
+          <h2 className="text-lg font-bold">Seleções</h2>
+          <p className="text-sm text-muted-foreground">
+            Conheça as 32 seleções classificadas. Elenco, histórico de títulos e odds de campeão para cada país.
+          </p>
+          <div className="text-sm font-semibold text-muted-foreground">
+            Ver seleções →
+          </div>
+        </Link>
+
+        <Link
+          href="/copa-2026/analises"
+          className="group rounded-2xl border bg-card hover:border-green-500/30 p-6 space-y-3 transition-colors"
+        >
+          <div className="text-3xl">🤖</div>
+          <h2 className="text-lg font-bold">Análises com IA</h2>
+          <p className="text-sm text-muted-foreground">
+            Palpites e análises gerados por inteligência artificial para cada jogo da Copa. Atualizados diariamente.
+          </p>
+          <div className="text-sm font-semibold text-muted-foreground">
+            Ver análises →
+          </div>
+        </Link>
+      </div>
+
       {/* Pontuação */}
       <div className="rounded-xl border bg-card p-6 space-y-4">
         <h2 className="font-bold text-base">Sistema de pontuação</h2>

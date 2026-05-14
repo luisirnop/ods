@@ -49,6 +49,12 @@ export default async function Header() {
           <Link href="/quiz" className="text-muted-foreground hover:text-foreground transition-colors">
             Quiz
           </Link>
+          <Link
+            href="/copa-2026"
+            className="text-amber-600 hover:text-amber-500 font-semibold transition-colors flex items-center gap-1"
+          >
+            🏆 Copa 2026
+          </Link>
           {user && (
             <Link href="/telegram" className="text-muted-foreground hover:text-foreground transition-colors">
               Telegram
