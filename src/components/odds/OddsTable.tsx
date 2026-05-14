@@ -1,13 +1,21 @@
 import { getAffiliateLink, type Bookmaker } from '@/lib/affiliates'
 import { cn } from '@/lib/utils'
 import type { OddsGame } from '@/types'
+import type { ValueBet } from '@/lib/value-bets'
 
 interface Props {
   game: OddsGame
   market?: 'h2h' | 'totals'
+  valueBets?: ValueBet[]
+  isPremium?: boolean
 }
 
-export default function OddsTable({ game, market = 'h2h' }: Props) {
+export default function OddsTable({
+  game,
+  market = 'h2h',
+  valueBets = [],
+  isPremium = false,
+}: Props) {
   // Coletar todas as odds por outcome
   const allOdds: Record<string, { price: number; bookmaker: string; bookmakerKey: string }[]> = {}
 
@@ -31,80 +39,115 @@ export default function OddsTable({ game, market = 'h2h' }: Props) {
   const outcomes = Object.keys(allOdds)
   const bookmakers = game.bookmakers
 
+  const hasValueBets = valueBets.length > 0
+
   return (
-    <div className="overflow-x-auto rounded-xl border">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b bg-muted/50">
-            <th className="text-left px-4 py-3 font-medium text-muted-foreground w-40">Casa</th>
-            {outcomes.map((name) => (
-              <th key={name} className="text-center px-4 py-3 font-medium text-muted-foreground">
-                {name === 'Draw' ? 'Empate' : name}
-              </th>
-            ))}
-            <th className="px-4 py-3 w-28" />
-          </tr>
-        </thead>
-        <tbody>
-          {bookmakers.map((bookmaker) => {
-            const mkt = bookmaker.markets.find((m) => m.key === market)
-            if (!mkt) return null
+    <div className="space-y-2">
+      {/* Banner de value bet para usuários free */}
+      {!isPremium && hasValueBets && (
+        <div className="flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/5 px-4 py-2.5 text-sm">
+          <span className="text-amber-500">⚡</span>
+          <span className="font-medium text-amber-700 dark:text-amber-400">
+            Value bet detectado neste mercado
+          </span>
+          <a
+            href="/premium"
+            className="ml-auto text-xs font-semibold text-amber-600 hover:text-amber-500 transition-colors"
+          >
+            Ver com Premium →
+          </a>
+        </div>
+      )}
 
-            return (
-              <tr key={bookmaker.key} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
-                <td className="px-4 py-3 font-medium">{bookmaker.title}</td>
+      <div className="overflow-x-auto rounded-xl border">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b bg-muted/50">
+              <th className="text-left px-4 py-3 font-medium text-muted-foreground w-40">Casa</th>
+              {outcomes.map((name) => (
+                <th key={name} className="text-center px-4 py-3 font-medium text-muted-foreground">
+                  {name === 'Draw' ? 'Empate' : name}
+                </th>
+              ))}
+              <th className="px-4 py-3 w-28" />
+            </tr>
+          </thead>
+          <tbody>
+            {bookmakers.map((bookmaker) => {
+              const mkt = bookmaker.markets.find((m) => m.key === market)
+              if (!mkt) return null
 
-                {outcomes.map((outcomeName) => {
-                  const rawName = market === 'totals'
-                    ? outcomeName.split(' ')[0]
-                    : outcomeName
+              return (
+                <tr key={bookmaker.key} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
+                  <td className="px-4 py-3 font-medium">{bookmaker.title}</td>
 
-                  const outcome = mkt.outcomes.find((o) => {
-                    if (market === 'totals') return o.name === rawName
-                    return o.name === outcomeName
-                  })
+                  {outcomes.map((outcomeName) => {
+                    const rawName = market === 'totals'
+                      ? outcomeName.split(' ')[0]
+                      : outcomeName
 
-                  if (!outcome) {
+                    const outcome = mkt.outcomes.find((o) => {
+                      if (market === 'totals') return o.name === rawName
+                      return o.name === outcomeName
+                    })
+
+                    if (!outcome) {
+                      return (
+                        <td key={outcomeName} className="px-4 py-3 text-center text-muted-foreground">
+                          —
+                        </td>
+                      )
+                    }
+
+                    const isBest = outcome.price === bestPerOutcome[outcomeName]
+
+                    const matchingValue = isPremium
+                      ? valueBets.find(
+                          (vb) => vb.bookmakerKey === bookmaker.key && vb.outcomeName === rawName
+                        )
+                      : undefined
+
                     return (
-                      <td key={outcomeName} className="px-4 py-3 text-center text-muted-foreground">
-                        —
+                      <td key={outcomeName} className="px-4 py-3 text-center">
+                        <div className="inline-flex flex-col items-center gap-0.5">
+                          <span
+                            className={cn(
+                              'inline-block rounded-lg px-2.5 py-1 font-bold tabular-nums',
+                              matchingValue
+                                ? 'bg-amber-500/10 text-amber-600 border border-amber-500/30'
+                                : isBest
+                                ? 'bg-green-500/10 text-green-600 border border-green-500/30'
+                                : 'text-foreground'
+                            )}
+                          >
+                            {outcome.price.toFixed(2)}
+                          </span>
+                          {matchingValue && (
+                            <span className="text-[10px] font-semibold text-amber-500 leading-none">
+                              ⚡ +{matchingValue.valuePercent.toFixed(1)}%
+                            </span>
+                          )}
+                        </div>
                       </td>
                     )
-                  }
+                  })}
 
-                  const isBest = outcome.price === bestPerOutcome[outcomeName]
-
-                  return (
-                    <td key={outcomeName} className="px-4 py-3 text-center">
-                      <span
-                        className={cn(
-                          'inline-block rounded-lg px-2.5 py-1 font-bold tabular-nums',
-                          isBest
-                            ? 'bg-green-500/10 text-green-600 border border-green-500/30'
-                            : 'text-foreground'
-                        )}
-                      >
-                        {outcome.price.toFixed(2)}
-                      </span>
-                    </td>
-                  )
-                })}
-
-                <td className="px-4 py-3 text-right">
-                  <a
-                    href={getAffiliateLink(bookmaker.key as Bookmaker, 'odds-table')}
-                    target="_blank"
-                    rel="noopener noreferrer nofollow"
-                    className="inline-flex items-center rounded-lg bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-3 py-1.5 transition-colors"
-                  >
-                    Apostar
-                  </a>
-                </td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
+                  <td className="px-4 py-3 text-right">
+                    <a
+                      href={getAffiliateLink(bookmaker.key as Bookmaker, 'odds-table')}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                      className="inline-flex items-center rounded-lg bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-3 py-1.5 transition-colors"
+                    >
+                      Apostar
+                    </a>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import OddsTable from '@/components/odds/OddsTable'
 import PredictionForm from '@/components/predictions/PredictionForm'
 import { MOCK_GAMES } from '@/lib/mock-data'
+import { detectValueBets } from '@/lib/value-bets'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://oddsbr.com.br'
 
@@ -57,6 +58,19 @@ export default async function JogoPage({ params }: Props) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  let isPremium = false
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('is_premium')
+      .eq('id', user.id)
+      .single()
+    isPremium = profile?.is_premium ?? false
+  }
+
+  const h2hResult = detectValueBets(game, 'h2h')
+  const totalsResult = detectValueBets(game, 'totals')
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SportsEvent',
@@ -97,13 +111,23 @@ export default async function JogoPage({ params }: Props) {
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">Resultado Final (1X2)</h2>
-        <OddsTable game={game} market="h2h" />
+        <OddsTable
+          game={game}
+          market="h2h"
+          valueBets={h2hResult.valueBets}
+          isPremium={isPremium}
+        />
       </section>
 
       {game.bookmakers.some((b) => b.markets.some((m) => m.key === 'totals')) && (
         <section className="space-y-3">
           <h2 className="text-lg font-semibold">Over/Under 2.5 gols</h2>
-          <OddsTable game={game} market="totals" />
+          <OddsTable
+            game={game}
+            market="totals"
+            valueBets={totalsResult.valueBets}
+            isPremium={isPremium}
+          />
         </section>
       )}
 
