@@ -13,6 +13,7 @@ import {
   User,
   LogOut,
 } from 'lucide-react'
+import { SidebarToggleBtn } from './SidebarPanel'
 
 const NAV = [
   { href: '/odds',        label: 'Comparador',  icon: BarChart3 },
@@ -41,7 +42,10 @@ export default async function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/5 bg-[oklch(0.07_0.012_253)] backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-6">
+      <div className="max-w-[1600px] mx-auto px-4 h-14 flex items-center gap-3">
+        {/* Toggle da sidebar */}
+        <SidebarToggleBtn />
+
         {/* Logo */}
         <Link href="/" className="flex items-center gap-1.5 shrink-0">
           <div className="w-7 h-7 rounded-lg bg-green-500 flex items-center justify-center neon-glow-sm">
@@ -53,7 +57,7 @@ export default async function Header() {
           </span>
         </Link>
 
-        {/* Nav — desktop */}
+        {/* Nav — desktop (menos itens, a sidebar cobre o resto) */}
         <nav className="hidden lg:flex items-center gap-0.5 flex-1">
           {NAV.map(({ href, label, icon: Icon }) => (
             <Link
@@ -129,26 +133,18 @@ export default async function Header() {
         </div>
       </div>
 
-      {/* Mobile nav */}
-      <div className="lg:hidden border-t border-white/5 overflow-x-auto">
-        <div className="flex items-center gap-0.5 px-4 py-1.5 min-w-max">
-          {NAV.map(({ href, label, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-muted-foreground hover:text-white hover:bg-white/5 rounded-lg transition-colors whitespace-nowrap"
-            >
-              <Icon className="w-3 h-3" />
-              {label}
-            </Link>
-          ))}
-          <Link
-            href="/copa-2026"
-            className="flex items-center gap-1 px-2.5 py-1 text-xs font-bold text-amber-400 whitespace-nowrap"
-          >
-            🏆 Copa
-          </Link>
-        </div>
+      {/* Barra de busca mobile / dica de abrir sidebar */}
+      <div className="lg:hidden border-t border-white/5 px-4 py-2 flex items-center gap-2">
+        <SidebarToggleBtn className="hidden" />
+        <span className="text-xs text-muted-foreground">
+          Toque em ☰ para abrir o menu completo
+        </span>
+        <Link
+          href="/copa-2026"
+          className="ml-auto text-xs font-bold text-amber-400 shrink-0"
+        >
+          🏆 Copa 2026
+        </Link>
       </div>
     </header>
   )

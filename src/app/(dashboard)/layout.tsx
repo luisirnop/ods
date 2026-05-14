@@ -1,12 +1,17 @@
 import Header from '@/components/shared/Header'
 import Footer from '@/components/shared/Footer'
+import Sidebar from '@/components/shared/Sidebar'
+import { SidebarProvider } from '@/components/shared/SidebarProvider'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <SidebarProvider>
       <Header />
-      <main className="flex-1 container mx-auto px-4 py-8">{children}</main>
+      <div className="flex flex-1 items-start">
+        <Sidebar />
+        <main className="flex-1 min-w-0 px-4 py-8">{children}</main>
+      </div>
       <Footer />
-    </>
+    </SidebarProvider>
   )
 }
