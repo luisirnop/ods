@@ -5,6 +5,8 @@ import { getArticleBySlug } from '@/lib/articles'
 
 export const revalidate = 3600
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://oddsbr.com.br'
+
 interface Props {
   params: Promise<{ slug: string }>
 }
@@ -81,8 +83,31 @@ export default async function ArticlePage({ params }: Props) {
     year: 'numeric',
   })
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: article.title,
+    description: article.meta_description ?? undefined,
+    datePublished: article.published_at,
+    dateModified: article.published_at,
+    author: { '@type': 'Organization', name: 'OddsBR' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'OddsBR',
+      url: SITE_URL,
+    },
+    url: `${SITE_URL}/noticias/${article.slug}`,
+    ...(article.home_team && article.away_team
+      ? { about: `${article.home_team} x ${article.away_team}` }
+      : {}),
+  }
+
   return (
     <div className="max-w-2xl mx-auto space-y-6 px-4 py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Breadcrumb */}
       <nav className="text-sm text-muted-foreground flex items-center gap-2">
         <Link href="/" className="hover:text-foreground transition-colors">

@@ -5,6 +5,8 @@ import OddsTable from '@/components/odds/OddsTable'
 import PredictionForm from '@/components/predictions/PredictionForm'
 import { MOCK_GAMES } from '@/lib/mock-data'
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://oddsbr.com.br'
+
 interface Props {
   params: Promise<{ slug: string }>
 }
@@ -14,12 +16,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const game = MOCK_GAMES.find((g) => g.id === slug)
   if (!game) return {}
 
+  const title = `${game.home_team} x ${game.away_team} — Odds e Palpite | OddsBR`
+  const description = `Compare odds para ${game.home_team} x ${game.away_team} pela ${game.sport_title}. Encontre o melhor valor nas principais casas de apostas do Brasil.`
+
   return {
-    title: `${game.home_team} x ${game.away_team} — Odds e Palpite`,
-    description: `Compare odds para ${game.home_team} x ${game.away_team} pela ${game.sport_title}. Melhor odd garantida.`,
+    title,
+    description,
     openGraph: {
       title: `${game.home_team} x ${game.away_team}`,
       description: `Compare odds e faça seu palpite — ${game.sport_title}`,
+      images: [`${SITE_URL}/api/og/jogo/${game.id}`],
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${game.home_team} x ${game.away_team}`,
+      description: `Compare odds — ${game.sport_title}`,
+      images: [`${SITE_URL}/api/og/jogo/${game.id}`],
     },
   }
 }
@@ -44,8 +57,25 @@ export default async function JogoPage({ params }: Props) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SportsEvent',
+    name: `${game.home_team} x ${game.away_team}`,
+    startDate: game.commence_time,
+    sport: 'Futebol',
+    homeTeam: { '@type': 'SportsTeam', name: game.home_team },
+    awayTeam: { '@type': 'SportsTeam', name: game.away_team },
+    description: `Compare odds para ${game.home_team} x ${game.away_team} pela ${game.sport_title}.`,
+    location: { '@type': 'Place', name: 'Brasil' },
+    url: `${SITE_URL}/jogos/${game.id}`,
+  }
+
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <section className="rounded-xl border bg-card p-6 space-y-4">
         <div className="text-sm text-muted-foreground font-medium">{game.sport_title}</div>
         <div className="flex items-center justify-between gap-6">
