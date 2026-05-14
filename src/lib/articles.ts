@@ -33,6 +33,7 @@ export type ArticleCard = Pick<
   | 'game_date'
   | 'published_at'
   | 'article_type'
+  | 'source_url'
 >
 
 export const getArticleBySlug = unstable_cache(
@@ -56,7 +57,7 @@ export const getRecentArticles = unstable_cache(
     const { data } = await admin
       .from('articles')
       .select(
-        'id, slug, title, meta_description, league, home_team, away_team, game_date, published_at, article_type'
+        'id, slug, title, meta_description, league, home_team, away_team, game_date, published_at, article_type, source_url'
       )
       .eq('published', true)
       .order('published_at', { ascending: false })
@@ -65,4 +66,22 @@ export const getRecentArticles = unstable_cache(
   },
   ['recent-articles'],
   { revalidate: 3600, tags: ['articles'] }
+)
+
+export const getLatestNews = unstable_cache(
+  async (limit = 5): Promise<ArticleCard[]> => {
+    const admin = getAdminClient()
+    const { data } = await admin
+      .from('articles')
+      .select(
+        'id, slug, title, meta_description, league, home_team, away_team, game_date, published_at, article_type, source_url'
+      )
+      .eq('published', true)
+      .eq('article_type', 'news')
+      .order('published_at', { ascending: false })
+      .limit(limit)
+    return (data ?? []) as ArticleCard[]
+  },
+  ['latest-news'],
+  { revalidate: 7200, tags: ['articles'] }
 )

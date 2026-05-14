@@ -4,6 +4,7 @@ import GameCard from '@/components/games/GameCard'
 import { MOCK_GAMES } from '@/lib/mock-data'
 import { createClient } from '@/lib/supabase/server'
 import { getAdminClient } from '@/lib/supabase/admin'
+import { getLatestNews } from '@/lib/articles'
 
 export const metadata: Metadata = {
   title: 'OddsBR — Comparador de Odds em Tempo Real',
@@ -18,15 +19,19 @@ export default async function HomePage() {
   } = await supabase.auth.getUser()
 
   let favoriteTeam: string | null = null
-  if (user) {
-    const admin = getAdminClient()
-    const { data: profile } = await admin
-      .from('profiles')
-      .select('favorite_team')
-      .eq('id', user.id)
-      .single()
-    favoriteTeam = profile?.favorite_team ?? null
-  }
+  const [latestNews] = await Promise.all([
+    getLatestNews(5),
+    (async () => {
+      if (!user) return
+      const admin = getAdminClient()
+      const { data: profile } = await admin
+        .from('profiles')
+        .select('favorite_team')
+        .eq('id', user.id)
+        .single()
+      favoriteTeam = profile?.favorite_team ?? null
+    })(),
+  ])
 
   const cutoff = new Date()
   cutoff.setDate(cutoff.getDate() + 1)
@@ -125,6 +130,47 @@ export default async function HomePage() {
             {upcomingGames.map((game) => (
               <GameCard key={game.id} game={game} />
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* Últimas notícias */}
+      {latestNews.length > 0 && (
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Últimas Notícias</h2>
+            <Link href="/noticias" className="text-sm text-green-600 hover:underline">
+              Ver todas →
+            </Link>
+          </div>
+          <div className="space-y-2">
+            {latestNews.map((article) => {
+              const timeAgo = (() => {
+                const diff = Date.now() - new Date(article.published_at).getTime()
+                const h = Math.floor(diff / 3600000)
+                const m = Math.floor(diff / 60000)
+                if (h >= 1) return `${h}h atrás`
+                if (m >= 1) return `${m}min atrás`
+                return 'agora'
+              })()
+              return (
+                <Link
+                  key={article.id}
+                  href={`/noticias/${article.slug}`}
+                  className="flex items-start gap-3 rounded-xl border bg-card p-3 hover:border-green-500/30 hover:bg-muted/30 transition-colors"
+                >
+                  <span className="text-xs text-muted-foreground shrink-0 mt-0.5 w-14 text-right">
+                    {timeAgo}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium leading-snug line-clamp-2">{article.title}</p>
+                    {article.league && (
+                      <p className="text-xs text-muted-foreground mt-0.5">{article.league}</p>
+                    )}
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </section>
       )}
