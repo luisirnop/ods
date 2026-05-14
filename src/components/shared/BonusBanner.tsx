@@ -46,7 +46,7 @@ export default function BonusBanner({ source }: Props) {
 
   return (
     <div
-      className="rounded-xl border bg-card overflow-hidden"
+      className="card-hover rounded-xl border border-white/8 bg-card overflow-hidden"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -60,14 +60,14 @@ export default function BonusBanner({ source }: Props) {
         {/* Conteúdo */}
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2 mb-0.5">
-            <span className="text-sm font-bold">{offer.name}</span>
+            <span className="text-sm font-bold text-white">{offer.name}</span>
             {offer.badge && (
-              <span className="rounded-full text-[10px] font-bold px-2 py-0.5 bg-amber-500/10 text-amber-600">
+              <span className="rounded-full text-[10px] font-bold px-2 py-0.5 bg-amber-500/10 text-amber-400 border border-amber-500/20">
                 {offer.badge}
               </span>
             )}
           </div>
-          <p className="text-xl font-extrabold text-green-600 leading-tight">{offer.bonus}</p>
+          <p className="text-xl font-extrabold text-green-400 leading-tight">{offer.bonus}</p>
           <p className="text-xs text-muted-foreground mt-0.5">{offer.highlight}</p>
         </div>
 
@@ -76,7 +76,7 @@ export default function BonusBanner({ source }: Props) {
           href={href}
           target="_blank"
           rel="noopener noreferrer nofollow sponsored"
-          className="shrink-0 inline-flex items-center rounded-lg bg-green-500 hover:bg-green-600 text-white px-4 py-2 text-sm font-semibold transition-colors"
+          className="shrink-0 inline-flex items-center rounded-lg bg-green-500 hover:bg-green-400 text-black px-4 py-2 text-sm font-bold transition-colors neon-glow-sm"
         >
           {CTA_LABELS[variant]}
         </a>
@@ -85,14 +85,14 @@ export default function BonusBanner({ source }: Props) {
         <div className="flex flex-col gap-1 shrink-0">
           <button
             onClick={prev}
-            className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors text-xs"
+            className="rounded p-1 text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-xs"
             aria-label="Oferta anterior"
           >
             ▲
           </button>
           <button
             onClick={next}
-            className="rounded p-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors text-xs"
+            className="rounded p-1 text-muted-foreground hover:text-white hover:bg-white/5 transition-colors text-xs"
             aria-label="Próxima oferta"
           >
             ▼

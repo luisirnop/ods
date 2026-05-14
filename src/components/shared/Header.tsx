@@ -1,6 +1,29 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { logout } from '@/actions/auth'
+import {
+  BarChart3,
+  Trophy,
+  Newspaper,
+  BookOpen,
+  Gift,
+  Calculator,
+  Brain,
+  Zap,
+  User,
+  LogOut,
+} from 'lucide-react'
+
+const NAV = [
+  { href: '/odds',        label: 'Comparador',  icon: BarChart3 },
+  { href: '/palpites',    label: 'Palpites',    icon: Trophy },
+  { href: '/ranking',     label: 'Ranking',     icon: Trophy },
+  { href: '/noticias',    label: 'Notícias',    icon: Newspaper },
+  { href: '/guias',       label: 'Guias',       icon: BookOpen },
+  { href: '/melhores-bonus', label: 'Bônus',   icon: Gift },
+  { href: '/calculadora', label: 'Calculadora', icon: Calculator },
+  { href: '/quiz',        label: 'Quiz',        icon: Brain },
+]
 
 export default async function Header() {
   const supabase = await createClient()
@@ -17,74 +40,73 @@ export default async function Header() {
   }
 
   return (
-    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-      <div className="container mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-1 font-bold text-lg">
-          <span className="text-green-500">Odds</span>
-          <span>BR</span>
+    <header className="sticky top-0 z-50 border-b border-white/5 bg-[oklch(0.07_0.012_253)] backdrop-blur-md">
+      <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-6">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-1.5 shrink-0">
+          <div className="w-7 h-7 rounded-lg bg-green-500 flex items-center justify-center neon-glow-sm">
+            <Zap className="w-4 h-4 text-black fill-black" />
+          </div>
+          <span className="font-extrabold text-lg tracking-tight">
+            <span className="text-white">Odds</span>
+            <span className="text-green-500">BR</span>
+          </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          <Link href="/odds" className="text-muted-foreground hover:text-foreground transition-colors">
-            Comparador
-          </Link>
-          <Link href="/palpites" className="text-muted-foreground hover:text-foreground transition-colors">
-            Palpites
-          </Link>
-          <Link href="/ranking" className="text-muted-foreground hover:text-foreground transition-colors">
-            Ranking
-          </Link>
-          <Link href="/noticias" className="text-muted-foreground hover:text-foreground transition-colors">
-            Notícias
-          </Link>
-          <Link href="/guias" className="text-muted-foreground hover:text-foreground transition-colors">
-            Guias
-          </Link>
-          <Link href="/melhores-bonus" className="text-muted-foreground hover:text-foreground transition-colors">
-            Bônus
-          </Link>
-          <Link href="/calculadora" className="text-muted-foreground hover:text-foreground transition-colors">
-            Calculadora
-          </Link>
-          <Link href="/quiz" className="text-muted-foreground hover:text-foreground transition-colors">
-            Quiz
-          </Link>
-          <Link
-            href="/copa-2026"
-            className="text-amber-600 hover:text-amber-500 font-semibold transition-colors flex items-center gap-1"
-          >
-            🏆 Copa 2026
-          </Link>
-          {user && (
-            <Link href="/telegram" className="text-muted-foreground hover:text-foreground transition-colors">
-              Telegram
-            </Link>
-          )}
-          {!profile?.is_premium && (
+        {/* Nav — desktop */}
+        <nav className="hidden lg:flex items-center gap-0.5 flex-1">
+          {NAV.map(({ href, label, icon: Icon }) => (
             <Link
-              href="/premium"
-              className="text-amber-600 hover:text-amber-500 font-semibold transition-colors"
+              key={href}
+              href={href}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground hover:text-white hover:bg-white/5 rounded-lg transition-colors"
             >
-              ⚡ Premium
+              <Icon className="w-3.5 h-3.5" />
+              {label}
             </Link>
-          )}
+          ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        {/* Right area */}
+        <div className="flex items-center gap-2 ml-auto shrink-0">
+          {/* Copa badge */}
+          <Link
+            href="/copa-2026"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-lg hover:bg-amber-500/20 transition-colors"
+          >
+            🏆 <span>Copa 2026</span>
+          </Link>
+
+          {/* Premium */}
+          {user && !profile?.is_premium && (
+            <Link
+              href="/premium"
+              className="hidden sm:flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-green-400 bg-green-500/10 border border-green-500/20 rounded-lg hover:bg-green-500/20 transition-colors"
+            >
+              <Zap className="w-3 h-3 fill-green-400" />
+              Premium
+            </Link>
+          )}
+
           {user ? (
             <>
               <Link
                 href="/perfil"
-                className="inline-flex h-8 items-center rounded-lg px-3 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground hover:text-white hover:bg-white/5 rounded-lg transition-colors"
               >
-                {profile?.display_name ?? user.email?.split('@')[0]}
+                <User className="w-4 h-4" />
+                <span className="hidden sm:block max-w-[100px] truncate">
+                  {profile?.display_name ?? user.email?.split('@')[0]}
+                </span>
               </Link>
               <form action={logout}>
                 <button
                   type="submit"
-                  className="inline-flex h-8 items-center rounded-lg border px-3 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                  title="Sair"
                 >
-                  Sair
+                  <LogOut className="w-4 h-4" />
+                  <span className="hidden sm:block">Sair</span>
                 </button>
               </form>
             </>
@@ -92,18 +114,40 @@ export default async function Header() {
             <>
               <Link
                 href="/login"
-                className="inline-flex h-8 items-center rounded-lg px-3 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                className="px-3 py-1.5 text-sm text-muted-foreground hover:text-white hover:bg-white/5 rounded-lg transition-colors"
               >
                 Entrar
               </Link>
               <Link
                 href="/cadastro"
-                className="inline-flex h-8 items-center rounded-lg bg-green-500 hover:bg-green-600 text-white px-3 text-sm font-semibold transition-colors"
+                className="px-4 py-1.5 text-sm font-bold text-black bg-green-500 hover:bg-green-400 rounded-lg transition-colors neon-glow-sm"
               >
                 Cadastrar
               </Link>
             </>
           )}
+        </div>
+      </div>
+
+      {/* Mobile nav */}
+      <div className="lg:hidden border-t border-white/5 overflow-x-auto">
+        <div className="flex items-center gap-0.5 px-4 py-1.5 min-w-max">
+          {NAV.map(({ href, label, icon: Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-muted-foreground hover:text-white hover:bg-white/5 rounded-lg transition-colors whitespace-nowrap"
+            >
+              <Icon className="w-3 h-3" />
+              {label}
+            </Link>
+          ))}
+          <Link
+            href="/copa-2026"
+            className="flex items-center gap-1 px-2.5 py-1 text-xs font-bold text-amber-400 whitespace-nowrap"
+          >
+            🏆 Copa
+          </Link>
         </div>
       </div>
     </header>
