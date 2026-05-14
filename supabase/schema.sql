@@ -224,6 +224,18 @@ create table public.quiz_answers (
 );
 
 -- ================================================
+-- PUSH SUBSCRIPTIONS (browser push notifications)
+-- ================================================
+create table public.push_subscriptions (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references public.profiles on delete cascade not null,
+  endpoint text not null,
+  subscription jsonb not null,
+  created_at timestamptz default now(),
+  unique(user_id, endpoint)
+);
+
+-- ================================================
 -- BOLÃO DA COPA 2026
 -- ================================================
 create table public.world_cup_brackets (
@@ -293,6 +305,12 @@ create policy "Quiz público para leitura" on public.daily_quiz for select using
 alter table public.quiz_answers enable row level security;
 create policy "Usuário vê próprias respostas" on public.quiz_answers for select using (auth.uid() = user_id);
 create policy "Usuário responde quiz" on public.quiz_answers for insert with check (auth.uid() = user_id);
+
+-- Push subscriptions: privado por usuário
+alter table public.push_subscriptions enable row level security;
+create policy "Usuário vê próprias subscriptions" on public.push_subscriptions for select using (auth.uid() = user_id);
+create policy "Usuário insere subscription" on public.push_subscriptions for insert with check (auth.uid() = user_id);
+create policy "Usuário exclui subscription" on public.push_subscriptions for delete using (auth.uid() = user_id);
 
 -- Bolão: público para leitura (via share_token), privado para escrita
 alter table public.world_cup_brackets enable row level security;

@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import GameCard from '@/components/games/GameCard'
 import { MOCK_GAMES } from '@/lib/mock-data'
+import { createClient } from '@/lib/supabase/server'
+import { getAdminClient } from '@/lib/supabase/admin'
 
 export const metadata: Metadata = {
   title: 'OddsBR — Comparador de Odds em Tempo Real',
@@ -8,22 +11,40 @@ export const metadata: Metadata = {
     'Compare odds das melhores casas de apostas do Brasil em tempo real. Palpites, rankings e análises de futebol.',
 }
 
-export default function HomePage() {
-  const today = MOCK_GAMES.filter((g) => {
-    const gameDate = new Date(g.commence_time)
-    const tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    tomorrow.setHours(23, 59, 59)
-    return gameDate <= tomorrow
-  })
+export default async function HomePage() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
-  const upcoming = MOCK_GAMES.filter((g) => {
-    const gameDate = new Date(g.commence_time)
-    const tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    tomorrow.setHours(23, 59, 59)
-    return gameDate > tomorrow
-  })
+  let favoriteTeam: string | null = null
+  if (user) {
+    const admin = getAdminClient()
+    const { data: profile } = await admin
+      .from('profiles')
+      .select('favorite_team')
+      .eq('id', user.id)
+      .single()
+    favoriteTeam = profile?.favorite_team ?? null
+  }
+
+  const cutoff = new Date()
+  cutoff.setDate(cutoff.getDate() + 1)
+  cutoff.setHours(23, 59, 59)
+
+  const todayGames = MOCK_GAMES.filter((g) => new Date(g.commence_time) <= cutoff)
+  const upcomingGames = MOCK_GAMES.filter((g) => new Date(g.commence_time) > cutoff)
+
+  const favoriteGames = favoriteTeam
+    ? todayGames.filter(
+        (g) =>
+          g.home_team.toLowerCase().includes(favoriteTeam!.toLowerCase()) ||
+          g.away_team.toLowerCase().includes(favoriteTeam!.toLowerCase())
+      )
+    : []
+  const otherGames = favoriteTeam
+    ? todayGames.filter((g) => !favoriteGames.includes(g))
+    : todayGames
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-10">
@@ -37,35 +58,93 @@ export default function HomePage() {
           Encontre a melhor odd em tempo real entre as principais casas de apostas.
           Aposte com estratégia — compare antes de decidir.
         </p>
+        {!user && (
+          <div className="flex items-center justify-center gap-3">
+            <Link
+              href="/cadastro"
+              className="inline-flex h-10 items-center rounded-lg bg-green-500 hover:bg-green-600 text-white px-5 text-sm font-semibold transition-colors"
+            >
+              Criar conta grátis
+            </Link>
+            <Link
+              href="/quiz"
+              className="inline-flex h-10 items-center rounded-lg border px-5 text-sm font-medium hover:bg-muted transition-colors"
+            >
+              Quiz do dia →
+            </Link>
+          </div>
+        )}
       </section>
 
-      {/* Jogos de hoje */}
-      {today.length > 0 && (
+      {/* Jogos do time favorito */}
+      {favoriteTeam && favoriteGames.length > 0 && (
         <section className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Jogos de Hoje e Amanhã</h2>
-            <a href="/odds" className="text-sm text-green-600 hover:underline">
+            <div>
+              <h2 className="text-xl font-semibold">Jogos do {favoriteTeam}</h2>
+              <p className="text-xs text-muted-foreground mt-0.5">Seu time favorito</p>
+            </div>
+            <Link href="/odds" className="text-sm text-green-600 hover:underline">
               Ver todos →
-            </a>
+            </Link>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {today.map((game) => (
+            {favoriteGames.map((game) => (
               <GameCard key={game.id} game={game} />
             ))}
           </div>
         </section>
       )}
 
-      {/* Próximos */}
-      {upcoming.length > 0 && (
+      {/* Jogos de hoje e amanhã */}
+      {otherGames.length > 0 && (
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold">Próximos Jogos</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">
+              {favoriteTeam ? 'Outros jogos de hoje' : 'Jogos de Hoje e Amanhã'}
+            </h2>
+            {!favoriteTeam && (
+              <Link href="/odds" className="text-sm text-green-600 hover:underline">
+                Ver todos →
+              </Link>
+            )}
+          </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {upcoming.map((game) => (
+            {otherGames.map((game) => (
               <GameCard key={game.id} game={game} />
             ))}
           </div>
         </section>
+      )}
+
+      {/* Próximos jogos */}
+      {upcomingGames.length > 0 && (
+        <section className="space-y-4">
+          <h2 className="text-xl font-semibold">Próximos Jogos</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {upcomingGames.map((game) => (
+              <GameCard key={game.id} game={game} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* CTA para usuários sem time favorito */}
+      {user && !favoriteTeam && (
+        <div className="rounded-xl border border-green-500/20 bg-green-500/5 p-4 text-sm flex items-center justify-between gap-4">
+          <div>
+            <p className="font-medium">Personalize sua home</p>
+            <p className="text-muted-foreground text-xs mt-0.5">
+              Configure seu time favorito para ver os jogos dele em destaque.
+            </p>
+          </div>
+          <Link
+            href="/perfil"
+            className="shrink-0 rounded-lg bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 text-xs font-semibold transition-colors"
+          >
+            Configurar →
+          </Link>
+        </div>
       )}
 
       {/* Aviso dados mock */}

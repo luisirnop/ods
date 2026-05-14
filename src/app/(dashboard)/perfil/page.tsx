@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getAdminClient } from '@/lib/supabase/admin'
 import PerfilForm from './PerfilForm'
+import PushToggle from '@/components/shared/PushToggle'
 
 export const metadata: Metadata = {
   title: 'Meu Perfil',
@@ -44,6 +45,16 @@ export default async function PerfilPage() {
       )}
 
       <PerfilForm profile={profile} userId={user.id} />
+
+      <div className="space-y-3">
+        <div>
+          <h2 className="font-semibold text-sm">Notificações do navegador</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Receba alertas quando o jogo do seu time favorito começar em breve.
+          </p>
+        </div>
+        <PushToggle />
+      </div>
     </div>
   )
 }
