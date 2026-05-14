@@ -6,24 +6,48 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 const AlertSchema = z.object({
-  team_name: z.string().optional(),
+  team_name: z.string().min(1, 'Informe um time ou campeonato').optional(),
   league: z.string().optional(),
   bookmaker: z.string().optional(),
   market: z.string().optional(),
   threshold: z.coerce.number().min(0.01).max(10).default(0.1),
 })
 
-export async function createAlert(formData: FormData) {
+const FREE_LIMIT = 3
+
+export async function getAlerts() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return []
+
+  const admin = getAdminClient()
+  const { data } = await admin
+    .from('odds_alerts')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+
+  return data ?? []
+}
+
+export async function createAlert(_prevState: unknown, formData: FormData) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return { error: 'Não autorizado' }
 
   const parsed = AlertSchema.safeParse(Object.fromEntries(formData))
   if (!parsed.success) return { error: parsed.error.flatten().fieldErrors }
 
+  if (!parsed.data.team_name && !parsed.data.league) {
+    return { error: 'Informe um time ou campeonato.' }
+  }
+
   const admin = getAdminClient()
 
-  // Verificar limite para usuários gratuitos
   const { data: profile } = await admin
     .from('profiles')
     .select('is_premium')
@@ -35,10 +59,11 @@ export async function createAlert(formData: FormData) {
       .from('odds_alerts')
       .select('id', { count: 'exact', head: true })
       .eq('user_id', user.id)
-      .eq('is_active', true)
 
-    if ((count ?? 0) >= 3) {
-      return { error: 'Limite de 3 alertas atingido. Faça upgrade para Premium para alertas ilimitados.' }
+    if ((count ?? 0) >= FREE_LIMIT) {
+      return {
+        error: `Limite de ${FREE_LIMIT} alertas atingido. Faça upgrade para Premium para alertas ilimitados.`,
+      }
     }
   }
 
@@ -55,7 +80,9 @@ export async function createAlert(formData: FormData) {
 
 export async function deleteAlert(id: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return { error: 'Não autorizado' }
 
   const admin = getAdminClient()
@@ -69,4 +96,34 @@ export async function deleteAlert(id: string) {
 
   revalidatePath('/alertas')
   return { success: true }
+}
+
+export async function toggleAlert(id: string) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return { error: 'Não autorizado' }
+
+  const admin = getAdminClient()
+
+  const { data: alert } = await admin
+    .from('odds_alerts')
+    .select('is_active')
+    .eq('id', id)
+    .eq('user_id', user.id)
+    .single()
+
+  if (!alert) return { error: 'Alerta não encontrado' }
+
+  const { error } = await admin
+    .from('odds_alerts')
+    .update({ is_active: !alert.is_active })
+    .eq('id', id)
+    .eq('user_id', user.id)
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/alertas')
+  return { success: true, is_active: !alert.is_active }
 }
