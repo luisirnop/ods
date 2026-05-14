@@ -6,11 +6,11 @@ export default async function Header() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  let profile = null
+  let profile: { display_name: string | null; username: string | null; is_premium: boolean } | null = null
   if (user) {
     const { data } = await supabase
       .from('profiles')
-      .select('display_name, username')
+      .select('display_name, username, is_premium')
       .eq('id', user.id)
       .single()
     profile = data
@@ -46,6 +46,14 @@ export default async function Header() {
           {user && (
             <Link href="/telegram" className="text-muted-foreground hover:text-foreground transition-colors">
               Telegram
+            </Link>
+          )}
+          {!profile?.is_premium && (
+            <Link
+              href="/premium"
+              className="text-amber-600 hover:text-amber-500 font-semibold transition-colors"
+            >
+              ⚡ Premium
             </Link>
           )}
         </nav>
