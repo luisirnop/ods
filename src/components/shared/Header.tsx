@@ -34,6 +34,9 @@ export default async function Header() {
           <Link href="/ranking" className="text-muted-foreground hover:text-foreground transition-colors">
             Ranking
           </Link>
+          <Link href="/noticias" className="text-muted-foreground hover:text-foreground transition-colors">
+            Notícias
+          </Link>
           <Link href="/quiz" className="text-muted-foreground hover:text-foreground transition-colors">
             Quiz
           </Link>

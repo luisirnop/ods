@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidateTag } from 'next/cache'
 import { getAdminClient } from '@/lib/supabase/admin'
 import { z } from 'zod'
 
@@ -39,6 +40,8 @@ export async function POST(request: NextRequest) {
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
+
+  revalidateTag('articles', 'max')
 
   return NextResponse.json({ success: true, id: data.id, slug: data.slug })
 }
