@@ -34,6 +34,11 @@ export default async function Header() {
           <Link href="/ranking" className="text-muted-foreground hover:text-foreground transition-colors">
             Ranking
           </Link>
+          {user && (
+            <Link href="/telegram" className="text-muted-foreground hover:text-foreground transition-colors">
+              Telegram
+            </Link>
+          )}
         </nav>
 
         <div className="flex items-center gap-2">
