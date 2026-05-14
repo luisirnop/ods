@@ -40,6 +40,9 @@ export default async function Header() {
           <Link href="/guias" className="text-muted-foreground hover:text-foreground transition-colors">
             Guias
           </Link>
+          <Link href="/melhores-bonus" className="text-muted-foreground hover:text-foreground transition-colors">
+            Bônus
+          </Link>
           <Link href="/calculadora" className="text-muted-foreground hover:text-foreground transition-colors">
             Calculadora
           </Link>

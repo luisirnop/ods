@@ -5,6 +5,7 @@ import { MOCK_GAMES } from '@/lib/mock-data'
 import { createClient } from '@/lib/supabase/server'
 import { getAdminClient } from '@/lib/supabase/admin'
 import { getLatestNews } from '@/lib/articles'
+import BonusBanner from '@/components/shared/BonusBanner'
 
 export const metadata: Metadata = {
   title: 'OddsBR — Comparador de Odds em Tempo Real',
@@ -80,6 +81,9 @@ export default async function HomePage() {
           </div>
         )}
       </section>
+
+      {/* Banner de bônus */}
+      <BonusBanner source="home" />
 
       {/* Jogos do time favorito */}
       {favoriteTeam && favoriteGames.length > 0 && (

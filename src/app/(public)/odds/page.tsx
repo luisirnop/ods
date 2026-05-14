@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import GameCard from '@/components/games/GameCard'
 import OddsTable from '@/components/odds/OddsTable'
 import { MOCK_GAMES } from '@/lib/mock-data'
+import BonusBanner from '@/components/shared/BonusBanner'
 
 export const metadata: Metadata = {
   title: 'Comparador de Odds',
@@ -18,6 +19,8 @@ export default function OddsPage() {
           Compare odds de todas as casas lado a lado. Verde = melhor odd do mercado.
         </p>
       </div>
+
+      <BonusBanner source="odds" />
 
       {/* Cards resumidos */}
       <section className="space-y-4">
