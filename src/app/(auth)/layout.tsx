@@ -13,7 +13,14 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </Link>
       <div className="w-full max-w-sm">{children}</div>
       <p className="mt-8 text-xs text-muted-foreground text-center">
-        Ao criar uma conta você concorda com nossos termos.
+        Ao criar uma conta você concorda com nossos{' '}
+        <Link href="/termos" className="underline underline-offset-2 hover:text-white transition-colors">
+          Termos de Uso
+        </Link>{' '}
+        e{' '}
+        <Link href="/privacidade" className="underline underline-offset-2 hover:text-white transition-colors">
+          Política de Privacidade
+        </Link>.
         Jogue com responsabilidade. +18.
       </p>
     </div>
