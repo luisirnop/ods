@@ -140,15 +140,6 @@ export default function DailyPoll({ game }: { game: PollGame }) {
         )}
       </div>
 
-      {/* Prêmios CTA */}
-      <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 px-3 py-2.5 space-y-1">
-        <p className="text-[11px] font-bold text-amber-400 flex items-center gap-1.5">
-          🎁 Concorra a prêmios
-        </p>
-        <p className="text-[10px] text-muted-foreground/80 leading-relaxed">
-          Os maiores acertadores da semana concorrem a bônus exclusivos nas casas parceiras.
-        </p>
-      </div>
     </div>
   )
 }
