@@ -23,6 +23,11 @@ const LINKS = {
     { href: '/perfil',   label: 'Meu Perfil' },
     { href: '/alertas',  label: 'Alertas de Odds' },
   ],
+  Legal: [
+    { href: '/termos',       label: 'Termos de Uso' },
+    { href: '/privacidade',  label: 'Política de Privacidade' },
+    { href: '/melhores-bonus', label: 'Casas de Apostas' },
+  ],
 }
 
 const CASAS = [
@@ -103,9 +108,15 @@ export default function Footer() {
             O OddsBR contém links de afiliados rastreados. Não operamos apostas e não recebemos dinheiro dos usuários para apostas.
             As odds exibidas podem variar. Aposte com estratégia — compare antes de decidir.
           </p>
-          <p className="text-[11px] text-muted-foreground/50">
-            © {new Date().getFullYear()} OddsBR. Todos os direitos reservados.
-          </p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-muted-foreground/50">
+            <span>© {new Date().getFullYear()} OddsBR. Todos os direitos reservados.</span>
+            <Link href="/termos" className="hover:text-muted-foreground transition-colors underline underline-offset-2">
+              Termos de Uso
+            </Link>
+            <Link href="/privacidade" className="hover:text-muted-foreground transition-colors underline underline-offset-2">
+              Política de Privacidade
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
