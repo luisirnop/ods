@@ -5,7 +5,7 @@ import { getAdminClient } from '@/lib/supabase/admin'
 import { getOdds, SPORTS, isSportKey } from '@/lib/odds-api'
 import { LEAGUES_CONFIG } from '@/lib/leagues'
 
-const MODEL = 'gemini-1.5-flash'
+const MODEL = 'gemini-2.5-flash'
 const MAX_GAMES = 5
 const HOURS_AHEAD = 48
 
@@ -134,7 +134,7 @@ Responda APENAS com JSON puro (sem markdown), neste formato exato:
             league: leagueName,
             game_date: game.commence_time,
             article_type: 'prediction',
-            generated_by: MODEL,
+            generated_by: `gemini/${MODEL}`,
             published: true,
             published_at: new Date().toISOString(),
           },
