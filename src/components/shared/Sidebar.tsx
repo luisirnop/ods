@@ -4,6 +4,7 @@ import { getAdminClient } from '@/lib/supabase/admin'
 import { MOCK_GAMES } from '@/lib/mock-data'
 import TeamBadge from '@/components/ui/TeamBadge'
 import { SidebarPanel } from './SidebarPanel'
+import FavoritosGuestSection from './FavoritosGuestSection'
 import {
   BarChart3,
   Trophy,
@@ -33,7 +34,7 @@ const LEAGUES = [
 // ─── Times populares ─────────────────────────────────────────────────────────
 const POPULAR_TEAMS = [
   'Flamengo', 'Palmeiras', 'Corinthians', 'São Paulo',
-  'Atlético-MG', 'Grêmio', 'Internacional', 'Fluminense',
+  'Atlético-MG', 'Fluminense',
 ]
 
 // ─── Ferramentas ─────────────────────────────────────────────────────────────
@@ -55,14 +56,14 @@ function SidebarSection({
   children: React.ReactNode
 }) {
   return (
-    <section className="py-3 border-b border-white/5 last:border-0">
-      <div className="flex items-center gap-2 px-4 mb-2">
+    <section className="border-b border-white/5 last:border-0">
+      <div className="flex items-center gap-2 px-4 py-2 bg-[oklch(0.10_0.010_253)]">
         <Icon className="w-3.5 h-3.5 text-green-500" />
         <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
           {title}
         </span>
       </div>
-      {children}
+      <div className="py-1">{children}</div>
     </section>
   )
 }
@@ -79,7 +80,7 @@ function SidebarLink({
   return (
     <Link
       href={href}
-      className={`flex items-center gap-2.5 px-4 py-1.5 text-sm text-muted-foreground hover:text-white hover:bg-white/5 rounded-none transition-colors ${className ?? ''}`}
+      className={`flex items-center gap-2.5 px-4 py-1 text-sm text-muted-foreground hover:text-white hover:bg-white/5 rounded-none transition-colors ${className ?? ''}`}
     >
       {children}
     </Link>
@@ -158,9 +159,9 @@ export default async function Sidebar() {
       </SidebarSection>
 
       {/* ─── Favoritos ───────────────────────────── */}
-      <SidebarSection icon={Heart} title="Favoritos">
-        {user ? (
-          favoriteTeam ? (
+      {user ? (
+        <SidebarSection icon={Heart} title="Favoritos">
+          {favoriteTeam ? (
             <>
               <SidebarLink href={`/odds?team=${encodeURIComponent(favoriteTeam)}`}>
                 <TeamBadge team={favoriteTeam} size="xs" />
@@ -181,21 +182,11 @@ export default async function Sidebar() {
               <Heart className="w-3.5 h-3.5 text-muted-foreground/50 shrink-0" />
               <span className="text-xs text-muted-foreground">Adicionar time favorito</span>
             </SidebarLink>
-          )
-        ) : (
-          <div className="px-4 py-2 space-y-1.5">
-            <p className="text-xs text-muted-foreground/70">
-              Entre para salvar favoritos e receber alertas.
-            </p>
-            <Link
-              href="/login"
-              className="block text-center text-xs font-bold text-green-400 border border-green-500/30 bg-green-500/8 hover:bg-green-500/15 rounded-lg py-1.5 transition-colors"
-            >
-              Entrar →
-            </Link>
-          </div>
-        )}
-      </SidebarSection>
+          )}
+        </SidebarSection>
+      ) : (
+        <FavoritosGuestSection />
+      )}
 
       {/* ─── Times ───────────────────────────────── */}
       <SidebarSection icon={Users} title="Times">
@@ -267,7 +258,7 @@ export default async function Sidebar() {
       </SidebarSection>
 
       {/* ─── Padding bottom ──────────────────────── */}
-      <div className="h-8" />
+      <div className="h-4" />
     </SidebarPanel>
   )
 }

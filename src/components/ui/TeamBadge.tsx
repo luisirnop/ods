@@ -20,7 +20,7 @@ export default function TeamBadge({ team, size = 'sm' }: Props) {
   if (brand.logo) {
     return (
       <div
-        className={`${container} rounded-full flex items-center justify-center overflow-hidden bg-white/10 shrink-0`}
+        className={`${container} rounded-full flex items-center justify-center overflow-hidden shrink-0 bg-white/8`}
         title={team}
       >
         <Image
@@ -28,7 +28,7 @@ export default function TeamBadge({ team, size = 'sm' }: Props) {
           alt={team}
           width={img}
           height={img}
-          className="object-contain p-0.5"
+          className="object-contain w-full h-full"
           unoptimized
         />
       </div>

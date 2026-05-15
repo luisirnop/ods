@@ -1,49 +1,50 @@
 export interface CopaTeam {
   name: string
-  flag: string
+  flag: string       // emoji (usado em metadata e <select>)
+  flagCode: string   // ISO 3166-1 alpha-2 para flagcdn.com
   confederation: 'CONMEBOL' | 'UEFA' | 'CONCACAF' | 'CAF' | 'AFC' | 'OFC'
 }
 
 export const COPA_TEAMS: CopaTeam[] = [
   // CONMEBOL
-  { name: 'Brasil', flag: '🇧🇷', confederation: 'CONMEBOL' },
-  { name: 'Argentina', flag: '🇦🇷', confederation: 'CONMEBOL' },
-  { name: 'Uruguai', flag: '🇺🇾', confederation: 'CONMEBOL' },
-  { name: 'Colômbia', flag: '🇨🇴', confederation: 'CONMEBOL' },
-  { name: 'Equador', flag: '🇪🇨', confederation: 'CONMEBOL' },
-  { name: 'Venezuela', flag: '🇻🇪', confederation: 'CONMEBOL' },
-  // CONCACAF (incluindo anfitriões)
-  { name: 'Estados Unidos', flag: '🇺🇸', confederation: 'CONCACAF' },
-  { name: 'México', flag: '🇲🇽', confederation: 'CONCACAF' },
-  { name: 'Canadá', flag: '🇨🇦', confederation: 'CONCACAF' },
-  { name: 'Panamá', flag: '🇵🇦', confederation: 'CONCACAF' },
-  { name: 'Costa Rica', flag: '🇨🇷', confederation: 'CONCACAF' },
-  { name: 'Jamaica', flag: '🇯🇲', confederation: 'CONCACAF' },
+  { name: 'Brasil',        flag: '🇧🇷', flagCode: 'br',     confederation: 'CONMEBOL' },
+  { name: 'Argentina',     flag: '🇦🇷', flagCode: 'ar',     confederation: 'CONMEBOL' },
+  { name: 'Uruguai',       flag: '🇺🇾', flagCode: 'uy',     confederation: 'CONMEBOL' },
+  { name: 'Colômbia',      flag: '🇨🇴', flagCode: 'co',     confederation: 'CONMEBOL' },
+  { name: 'Equador',       flag: '🇪🇨', flagCode: 'ec',     confederation: 'CONMEBOL' },
+  { name: 'Venezuela',     flag: '🇻🇪', flagCode: 've',     confederation: 'CONMEBOL' },
+  // CONCACAF
+  { name: 'Estados Unidos',flag: '🇺🇸', flagCode: 'us',     confederation: 'CONCACAF' },
+  { name: 'México',        flag: '🇲🇽', flagCode: 'mx',     confederation: 'CONCACAF' },
+  { name: 'Canadá',        flag: '🇨🇦', flagCode: 'ca',     confederation: 'CONCACAF' },
+  { name: 'Panamá',        flag: '🇵🇦', flagCode: 'pa',     confederation: 'CONCACAF' },
+  { name: 'Costa Rica',    flag: '🇨🇷', flagCode: 'cr',     confederation: 'CONCACAF' },
+  { name: 'Jamaica',       flag: '🇯🇲', flagCode: 'jm',     confederation: 'CONCACAF' },
   // UEFA
-  { name: 'França', flag: '🇫🇷', confederation: 'UEFA' },
-  { name: 'Inglaterra', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', confederation: 'UEFA' },
-  { name: 'Alemanha', flag: '🇩🇪', confederation: 'UEFA' },
-  { name: 'Espanha', flag: '🇪🇸', confederation: 'UEFA' },
-  { name: 'Portugal', flag: '🇵🇹', confederation: 'UEFA' },
-  { name: 'Holanda', flag: '🇳🇱', confederation: 'UEFA' },
-  { name: 'Bélgica', flag: '🇧🇪', confederation: 'UEFA' },
-  { name: 'Itália', flag: '🇮🇹', confederation: 'UEFA' },
-  { name: 'Croácia', flag: '🇭🇷', confederation: 'UEFA' },
-  { name: 'Suíça', flag: '🇨🇭', confederation: 'UEFA' },
-  { name: 'Dinamarca', flag: '🇩🇰', confederation: 'UEFA' },
-  { name: 'Áustria', flag: '🇦🇹', confederation: 'UEFA' },
-  { name: 'Sérvia', flag: '🇷🇸', confederation: 'UEFA' },
-  { name: 'Turquia', flag: '🇹🇷', confederation: 'UEFA' },
+  { name: 'França',        flag: '🇫🇷', flagCode: 'fr',     confederation: 'UEFA' },
+  { name: 'Inglaterra',    flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', flagCode: 'gb-eng', confederation: 'UEFA' },
+  { name: 'Alemanha',      flag: '🇩🇪', flagCode: 'de',     confederation: 'UEFA' },
+  { name: 'Espanha',       flag: '🇪🇸', flagCode: 'es',     confederation: 'UEFA' },
+  { name: 'Portugal',      flag: '🇵🇹', flagCode: 'pt',     confederation: 'UEFA' },
+  { name: 'Holanda',       flag: '🇳🇱', flagCode: 'nl',     confederation: 'UEFA' },
+  { name: 'Bélgica',       flag: '🇧🇪', flagCode: 'be',     confederation: 'UEFA' },
+  { name: 'Itália',        flag: '🇮🇹', flagCode: 'it',     confederation: 'UEFA' },
+  { name: 'Croácia',       flag: '🇭🇷', flagCode: 'hr',     confederation: 'UEFA' },
+  { name: 'Suíça',         flag: '🇨🇭', flagCode: 'ch',     confederation: 'UEFA' },
+  { name: 'Dinamarca',     flag: '🇩🇰', flagCode: 'dk',     confederation: 'UEFA' },
+  { name: 'Áustria',       flag: '🇦🇹', flagCode: 'at',     confederation: 'UEFA' },
+  { name: 'Sérvia',        flag: '🇷🇸', flagCode: 'rs',     confederation: 'UEFA' },
+  { name: 'Turquia',       flag: '🇹🇷', flagCode: 'tr',     confederation: 'UEFA' },
   // CAF
-  { name: 'Marrocos', flag: '🇲🇦', confederation: 'CAF' },
-  { name: 'Senegal', flag: '🇸🇳', confederation: 'CAF' },
-  { name: 'Nigéria', flag: '🇳🇬', confederation: 'CAF' },
-  { name: 'Egito', flag: '🇪🇬', confederation: 'CAF' },
+  { name: 'Marrocos',      flag: '🇲🇦', flagCode: 'ma',     confederation: 'CAF' },
+  { name: 'Senegal',       flag: '🇸🇳', flagCode: 'sn',     confederation: 'CAF' },
+  { name: 'Nigéria',       flag: '🇳🇬', flagCode: 'ng',     confederation: 'CAF' },
+  { name: 'Egito',         flag: '🇪🇬', flagCode: 'eg',     confederation: 'CAF' },
   // AFC
-  { name: 'Japão', flag: '🇯🇵', confederation: 'AFC' },
-  { name: 'Coreia do Sul', flag: '🇰🇷', confederation: 'AFC' },
-  { name: 'Arábia Saudita', flag: '🇸🇦', confederation: 'AFC' },
-  { name: 'Austrália', flag: '🇦🇺', confederation: 'AFC' },
+  { name: 'Japão',         flag: '🇯🇵', flagCode: 'jp',     confederation: 'AFC' },
+  { name: 'Coreia do Sul', flag: '🇰🇷', flagCode: 'kr',     confederation: 'AFC' },
+  { name: 'Arábia Saudita',flag: '🇸🇦', flagCode: 'sa',     confederation: 'AFC' },
+  { name: 'Austrália',     flag: '🇦🇺', flagCode: 'au',     confederation: 'AFC' },
 ]
 
 export const CONFEDERATION_LABELS: Record<string, string> = {

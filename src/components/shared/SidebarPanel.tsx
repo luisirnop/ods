@@ -26,7 +26,7 @@ export function SidebarPanel({ children }: { children: ReactNode }) {
       <aside
         className={cn(
           // Dimensões e visual
-          'w-[260px] shrink-0 border-r border-white/5 bg-[oklch(0.075_0.012_253)] overflow-y-auto',
+          'w-[260px] shrink-0 border-r border-white/5 bg-[oklch(0.075_0.012_253)] overflow-y-auto no-scrollbar',
           // Altura total abaixo do header (header = h-14 = 3.5rem)
           'h-[calc(100vh-3.5rem)]',
           // Mobile: fixed drawer

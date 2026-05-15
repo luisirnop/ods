@@ -18,6 +18,18 @@ const nextConfig: NextConfig = {
         hostname: 'www.thesportsdb.com',
         pathname: '/images/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'flagcdn.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.pexels.com',
+      },
     ],
   },
 }

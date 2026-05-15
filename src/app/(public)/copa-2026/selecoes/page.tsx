@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { COPA_TEAMS, CONFEDERATION_LABELS, type CopaTeam } from '@/lib/copa-2026'
+import CountryFlag from '@/components/ui/CountryFlag'
 
 export const metadata: Metadata = {
   title: 'Seleções da Copa do Mundo 2026 — OddsBR',
@@ -36,7 +37,7 @@ function ConfederationGroup({
             href={`/copa-2026/selecoes/${slugify(team.name)}`}
             className="group flex items-center gap-3 rounded-xl border bg-card px-4 py-3 hover:border-green-500/30 hover:bg-green-500/5 transition-colors"
           >
-            <span className="text-2xl">{team.flag}</span>
+            <CountryFlag code={team.flagCode} name={team.name} size="sm" />
             <span className="text-sm font-medium group-hover:text-green-600 transition-colors leading-tight">
               {team.name}
             </span>

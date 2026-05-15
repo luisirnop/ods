@@ -59,13 +59,13 @@ export default function OddsTable({
         </div>
       )}
 
-      <div className="overflow-x-auto rounded-xl border">
+      <div className="overflow-x-auto rounded-xl border border-white/8">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b bg-muted/50">
-              <th className="text-left px-4 py-3 font-medium text-muted-foreground w-40">Casa</th>
+            <tr className="border-b border-white/8 bg-[oklch(0.13_0.012_253)]">
+              <th className="text-left px-4 py-3 font-semibold text-muted-foreground w-40 uppercase text-[11px] tracking-wide">Casa</th>
               {outcomes.map((name) => (
-                <th key={name} className="text-center px-4 py-3 font-medium text-muted-foreground">
+                <th key={name} className="text-center px-4 py-3 font-semibold text-muted-foreground uppercase text-[11px] tracking-wide">
                   {name === 'Draw' ? 'Empate' : name}
                 </th>
               ))}
@@ -78,7 +78,7 @@ export default function OddsTable({
               if (!mkt) return null
 
               return (
-                <tr key={bookmaker.key} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
+                <tr key={bookmaker.key} className="border-b border-white/5 last:border-0 odd:bg-[oklch(0.115_0.012_253)] even:bg-transparent hover:bg-[oklch(0.19_0.015_253)] transition-colors">
                   <td className="px-4 py-3 font-medium">{bookmaker.title}</td>
 
                   {outcomes.map((outcomeName) => {

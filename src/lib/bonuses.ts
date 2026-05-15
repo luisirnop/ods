@@ -11,6 +11,7 @@ export interface BonusOffer {
   highlight: string
   badge?: string
   accentColor: string
+  promoCode?: string
 }
 
 export const BONUS_OFFERS: BonusOffer[] = [
@@ -25,6 +26,7 @@ export const BONUS_OFFERS: BonusOffer[] = [
     highlight: 'Maior bônus do mercado',
     badge: 'MAIS POPULAR',
     accentColor: '#e23737',
+    promoCode: 'ODDSBR500',
   },
   {
     bookmakerKey: 'bet365',
@@ -37,6 +39,7 @@ export const BONUS_OFFERS: BonusOffer[] = [
     highlight: 'Menor rollover do mercado',
     badge: 'MELHOR ROLLOVER',
     accentColor: '#1a7c3e',
+    promoCode: 'ODDSBR',
   },
   {
     bookmakerKey: 'kto',
@@ -49,6 +52,7 @@ export const BONUS_OFFERS: BonusOffer[] = [
     highlight: 'Maior valor absoluto',
     badge: 'MAIOR VALOR',
     accentColor: '#f59e0b',
+    promoCode: 'ODDS1000',
   },
   {
     bookmakerKey: 'superbet',
@@ -60,6 +64,7 @@ export const BONUS_OFFERS: BonusOffer[] = [
     rolloverOdds: 1.50,
     highlight: 'Rollover mais fácil de cumprir',
     accentColor: '#7c3aed',
+    promoCode: 'ODDSBR',
   },
   {
     bookmakerKey: 'estrelabet',
@@ -71,5 +76,6 @@ export const BONUS_OFFERS: BonusOffer[] = [
     rolloverOdds: 1.50,
     highlight: 'Ampla cobertura de mercados',
     accentColor: '#0ea5e9',
+    promoCode: 'ESTRELA300',
   },
 ]

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { BONUS_OFFERS } from '@/lib/bonuses'
+import BonusTicker from '@/components/shared/BonusTicker'
 
 export const metadata: Metadata = {
   title: 'Melhores Bônus de Apostas Esportivas 2026 — OddsBR',
@@ -45,7 +46,10 @@ export default function MelhoresBonusPage() {
         </p>
       </div>
 
-      {/* Cards */}
+      {/* Ticker horizontal */}
+      <BonusTicker />
+
+      {/* Cards detalhados */}
       <div className="space-y-4">
         {BONUS_OFFERS.map((offer, i) => (
           <div

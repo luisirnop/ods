@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { COPA_TEAMS, CONFEDERATION_LABELS, getTeamBySlug, getTeamStats, slugifyTeam } from '@/lib/copa-2026'
 import { getAdminClient } from '@/lib/supabase/admin'
+import CountryFlag from '@/components/ui/CountryFlag'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://oddsbr.com.br'
 
@@ -86,7 +87,7 @@ export default async function SelecaoPage({ params }: Props) {
       {/* Hero */}
       <div className="rounded-2xl border bg-card p-6 sm:p-8 space-y-4">
         <div className="flex items-center gap-4">
-          <span className="text-6xl">{team.flag}</span>
+          <CountryFlag code={team.flagCode} name={team.name} size="xl" className="rounded-lg shadow-md" />
           <div>
             <h1 className="text-3xl font-extrabold">{team.name}</h1>
             <p className="text-sm text-muted-foreground">
@@ -216,7 +217,7 @@ export default async function SelecaoPage({ params }: Props) {
                 href={`/copa-2026/selecoes/${slugifyTeam(t.name)}`}
                 className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-xs font-medium hover:border-green-500/30 transition-colors"
               >
-                <span>{t.flag}</span>
+                <CountryFlag code={t.flagCode} name={t.name} size="xs" />
                 <span className="truncate">{t.name}</span>
               </Link>
             ))}

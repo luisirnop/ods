@@ -5,7 +5,8 @@ import { MOCK_GAMES } from '@/lib/mock-data'
 import { createClient } from '@/lib/supabase/server'
 import { getAdminClient } from '@/lib/supabase/admin'
 import { getLatestNews } from '@/lib/articles'
-import BonusBanner from '@/components/shared/BonusBanner'
+import BonusTicker from '@/components/shared/BonusTicker'
+import NewsCardsSection from '@/components/shared/NewsCardsSection'
 import { BarChart3, Zap, Trophy, TrendingUp, Newspaper } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -59,69 +60,68 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero */}
-      <section className="relative hero-gradient px-4 py-14 text-center overflow-hidden">
+      {/* Hero — compacto */}
+      <section className="relative hero-gradient px-4 py-6 overflow-hidden">
         {/* Glow orb */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 flex items-start justify-center"
-        >
-          <div className="w-[600px] h-[300px] rounded-full bg-green-500/8 blur-3xl" />
+        <div aria-hidden className="pointer-events-none absolute inset-0 flex items-start justify-center">
+          <div className="w-[500px] h-[160px] rounded-full bg-green-500/8 blur-3xl" />
         </div>
 
-        <div className="relative max-w-3xl mx-auto space-y-5">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-green-500/25 bg-green-500/8 px-4 py-1.5 text-xs font-semibold text-green-400">
-            <span className="live-dot w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
-            Odds atualizadas em tempo real
+        <div className="relative max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          {/* Esquerda: título + descrição */}
+          <div className="space-y-1.5">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-green-500/25 bg-green-500/8 px-3 py-1 text-[11px] font-semibold text-green-400">
+              <span className="live-dot w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
+              Odds atualizadas em tempo real
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight leading-snug">
+              Compare as melhores <span className="text-neon">odds do Brasil</span>
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Melhor odd entre as principais casas · Aposte com estratégia
+            </p>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight">
-            Compare as melhores{' '}
-            <span className="text-neon">odds do Brasil</span>
-          </h1>
-
-          <p className="text-base text-muted-foreground max-w-xl mx-auto">
-            Encontre a melhor odd entre as principais casas de apostas.
-            Aposte com estratégia — compare antes de decidir.
-          </p>
-
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Link
-              href="/odds"
-              className="inline-flex h-11 items-center gap-2 rounded-xl bg-green-500 hover:bg-green-400 text-black px-6 text-sm font-bold transition-colors neon-glow"
-            >
-              <BarChart3 className="w-4 h-4" />
-              Comparar odds agora
-            </Link>
-            {!user && (
-              <Link
-                href="/cadastro"
-                className="inline-flex h-11 items-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 px-6 text-sm font-medium transition-colors"
-              >
-                Criar conta grátis →
-              </Link>
-            )}
-          </div>
-
-          {/* Stats */}
-          <div className="flex items-center justify-center gap-6 sm:gap-10 pt-2">
-            {STATS.map(({ label, value, icon: Icon }) => (
-              <div key={label} className="text-center">
-                <div className="flex items-center justify-center gap-1.5 text-xl font-extrabold text-white">
-                  <Icon className="w-4 h-4 text-green-500" />
-                  {value}
+          {/* Direita: stats + CTAs */}
+          <div className="flex flex-col gap-3 sm:items-end">
+            {/* Stats em linha */}
+            <div className="flex items-center gap-5">
+              {STATS.map(({ label, value, icon: Icon }) => (
+                <div key={label} className="flex items-center gap-1.5">
+                  <Icon className="w-3.5 h-3.5 text-green-500 shrink-0" />
+                  <span className="text-sm font-bold text-white">{value}</span>
+                  <span className="text-[11px] text-muted-foreground hidden sm:block">{label}</span>
                 </div>
-                <div className="text-[11px] text-muted-foreground mt-0.5">{label}</div>
-              </div>
-            ))}
+              ))}
+            </div>
+            {/* CTAs */}
+            <div className="flex items-center gap-2">
+              <Link
+                href="/odds"
+                className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-green-500 hover:bg-green-400 text-black px-4 text-sm font-bold transition-colors neon-glow-sm"
+              >
+                <BarChart3 className="w-3.5 h-3.5" />
+                Comparar odds
+              </Link>
+              {!user && (
+                <Link
+                  href="/cadastro"
+                  className="inline-flex h-9 items-center rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 px-4 text-sm font-medium transition-colors"
+                >
+                  Criar conta →
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </section>
 
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-10">
         {/* Banner de bônus */}
-        <BonusBanner source="home" />
+        <BonusTicker />
+
+        {/* Notícias da semana */}
+        <NewsCardsSection />
 
         {/* Jogos do time favorito */}
         {favoriteTeam && favoriteGames.length > 0 && (

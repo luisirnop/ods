@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { getAdminClient } from '@/lib/supabase/admin'
 import { getTeamByName } from '@/lib/copa-2026'
 import { createClient } from '@/lib/supabase/server'
+import CountryFlag from '@/components/ui/CountryFlag'
 
 interface Props {
   params: Promise<{ token: string }>
@@ -52,7 +53,7 @@ export default async function BolaoSharedPage({ params }: Props) {
   const champion = data.champion ? getTeamByName(data.champion) : null
   const runnerUp = data.runner_up ? getTeamByName(data.runner_up) : null
   const preds = data.predictions as { semifinalists?: string[] } | null
-  const semis = (preds?.semifinalists ?? []).map((s) => getTeamByName(s) ?? { name: s, flag: '🏳️', confederation: 'UEFA' as const })
+  const semis = (preds?.semifinalists ?? []).map((s) => getTeamByName(s) ?? { name: s, flag: '🏳️', flagCode: '', confederation: 'UEFA' as const })
 
   const shareUrl = typeof window !== 'undefined'
     ? window.location.href
@@ -93,9 +94,10 @@ export default async function BolaoSharedPage({ params }: Props) {
               <p className="text-xs font-semibold text-amber-600 uppercase tracking-wide">
                 🏆 Campeão (+10 pts)
               </p>
-              <p className="text-xl font-extrabold">
-                {champion ? `${champion.flag} ${champion.name}` : '—'}
-              </p>
+              <div className="flex items-center gap-2.5">
+                {champion && <CountryFlag code={champion.flagCode} name={champion.name} size="md" />}
+                <p className="text-xl font-extrabold">{champion ? champion.name : '—'}</p>
+              </div>
             </div>
             <div className="text-4xl opacity-20">🏆</div>
           </div>
@@ -108,9 +110,10 @@ export default async function BolaoSharedPage({ params }: Props) {
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 🥈 Vice-campeão (+5 pts)
               </p>
-              <p className="text-lg font-bold">
-                {runnerUp ? `${runnerUp.flag} ${runnerUp.name}` : '—'}
-              </p>
+              <div className="flex items-center gap-2.5">
+                {runnerUp && <CountryFlag code={runnerUp.flagCode} name={runnerUp.name} size="sm" />}
+                <p className="text-lg font-bold">{runnerUp ? runnerUp.name : '—'}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -125,9 +128,10 @@ export default async function BolaoSharedPage({ params }: Props) {
               {semis.map((team) => (
                 <div
                   key={team.name}
-                  className="rounded-lg bg-muted/50 px-3 py-2 text-sm font-medium"
+                  className="flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2 text-sm font-medium"
                 >
-                  {team.flag} {team.name}
+                  <CountryFlag code={team.flagCode} name={team.name} size="xs" />
+                  {team.name}
                 </div>
               ))}
             </div>
