@@ -1,4 +1,4 @@
-import { getAffiliateLink, type Bookmaker } from '@/lib/affiliates'
+import { getAffiliateLink, REGULATED_BR_BOOKMAKER_KEYS, DEFAULT_BOOKMAKER, type Bookmaker } from '@/lib/affiliates'
 import { cn } from '@/lib/utils'
 import type { OddsGame } from '@/types'
 import type { ValueBet } from '@/lib/value-bets'
@@ -16,10 +16,16 @@ export default function OddsTable({
   valueBets = [],
   isPremium = false,
 }: Props) {
-  // Coletar todas as odds por outcome
+  // Apenas casas regulamentadas no Brasil (SPA/MF)
+  const regulatedBookmakers = game.bookmakers.filter((b) =>
+    REGULATED_BR_BOOKMAKER_KEYS.has(b.key)
+  )
+  const bookmakers = regulatedBookmakers.length > 0 ? regulatedBookmakers : []
+
+  // Coletar todas as odds por outcome (somente regulamentadas)
   const allOdds: Record<string, { price: number; bookmaker: string; bookmakerKey: string }[]> = {}
 
-  for (const bookmaker of game.bookmakers) {
+  for (const bookmaker of bookmakers) {
     const mkt = bookmaker.markets.find((m) => m.key === market)
     if (!mkt) continue
 
@@ -37,9 +43,26 @@ export default function OddsTable({
   }
 
   const outcomes = Object.keys(allOdds)
-  const bookmakers = game.bookmakers
 
   const hasValueBets = valueBets.length > 0
+
+  if (bookmakers.length === 0) {
+    return (
+      <div className="rounded-xl border border-white/8 bg-card p-6 text-center space-y-2">
+        <p className="text-sm font-medium text-white/70">
+          Odds indisponíveis em casas regulamentadas pelo SPA/MF para este jogo.
+        </p>
+        <a
+          href={getAffiliateLink(DEFAULT_BOOKMAKER, 'odds-table-empty')}
+          target="_blank"
+          rel="noopener noreferrer nofollow sponsored"
+          className="inline-flex items-center rounded-lg bg-green-500 hover:bg-green-400 text-black text-xs font-bold px-4 py-2 transition-colors"
+        >
+          Ver odds na Betano →
+        </a>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-2">
@@ -134,9 +157,14 @@ export default function OddsTable({
 
                   <td className="px-4 py-3 text-right">
                     <a
-                      href={getAffiliateLink(bookmaker.key as Bookmaker, 'odds-table')}
+                      href={getAffiliateLink(
+                        REGULATED_BR_BOOKMAKER_KEYS.has(bookmaker.key)
+                          ? (bookmaker.key as Bookmaker)
+                          : DEFAULT_BOOKMAKER,
+                        'odds-table'
+                      )}
                       target="_blank"
-                      rel="noopener noreferrer nofollow"
+                      rel="noopener noreferrer nofollow sponsored"
                       className="inline-flex items-center rounded-lg bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-3 py-1.5 transition-colors"
                     >
                       Apostar

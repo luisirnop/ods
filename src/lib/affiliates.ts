@@ -4,6 +4,20 @@ export type Bookmaker =
   | 'kto'
   | 'bet365'
   | 'estrelabet'
+  | 'betway'
+
+// Chaves usadas pelo The Odds API para casas regulamentadas no Brasil (SPA/MF)
+export const REGULATED_BR_BOOKMAKER_KEYS = new Set<string>([
+  'betano',
+  'bet365',
+  'betway',
+  'superbet',
+  'kto',
+  'estrelabet',
+])
+
+// Casa padrão para o botão "Apostar" quando nenhuma afiliada tem odds disponíveis
+export const DEFAULT_BOOKMAKER: Bookmaker = 'betano'
 
 type AffiliateConfig = {
   name: string
@@ -42,6 +56,12 @@ const AFFILIATES: Record<Bookmaker, AffiliateConfig> = {
     baseUrl: 'https://www.estrelabet.com',
     affiliateParam: 'ref',
     affiliateId: process.env.AFFILIATE_ESTRELABET_ID ?? '',
+  },
+  betway: {
+    name: 'Betway',
+    baseUrl: 'https://betway.com.br',
+    affiliateParam: 'ref',
+    affiliateId: process.env.AFFILIATE_BETWAY_ID ?? '',
   },
 }
 

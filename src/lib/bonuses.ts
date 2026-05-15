@@ -12,6 +12,7 @@ export interface BonusOffer {
   badge?: string
   accentColor: string
   promoCode?: string
+  regulatedBR: true   // apenas casas licenciadas pelo SPA/MF aparecem aqui
 }
 
 export const BONUS_OFFERS: BonusOffer[] = [
@@ -27,6 +28,7 @@ export const BONUS_OFFERS: BonusOffer[] = [
     badge: 'MAIS POPULAR',
     accentColor: '#e23737',
     promoCode: 'ODDSBR500',
+    regulatedBR: true,
   },
   {
     bookmakerKey: 'bet365',
@@ -40,6 +42,7 @@ export const BONUS_OFFERS: BonusOffer[] = [
     badge: 'MELHOR ROLLOVER',
     accentColor: '#1a7c3e',
     promoCode: 'ODDSBR',
+    regulatedBR: true,
   },
   {
     bookmakerKey: 'kto',
@@ -53,6 +56,7 @@ export const BONUS_OFFERS: BonusOffer[] = [
     badge: 'MAIOR VALOR',
     accentColor: '#f59e0b',
     promoCode: 'ODDS1000',
+    regulatedBR: true,
   },
   {
     bookmakerKey: 'superbet',
@@ -65,6 +69,7 @@ export const BONUS_OFFERS: BonusOffer[] = [
     highlight: 'Rollover mais fácil de cumprir',
     accentColor: '#7c3aed',
     promoCode: 'ODDSBR',
+    regulatedBR: true,
   },
   {
     bookmakerKey: 'estrelabet',
@@ -77,5 +82,6 @@ export const BONUS_OFFERS: BonusOffer[] = [
     highlight: 'Ampla cobertura de mercados',
     accentColor: '#0ea5e9',
     promoCode: 'ESTRELA300',
+    regulatedBR: true,
   },
 ]

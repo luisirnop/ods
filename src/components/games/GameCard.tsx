@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import type { OddsGame } from '@/types'
 import { getBestOdds } from '@/lib/odds-api'
-import { getAffiliateLink, type Bookmaker } from '@/lib/affiliates'
+import { getAffiliateLink, DEFAULT_BOOKMAKER, type Bookmaker } from '@/lib/affiliates'
 import { cn } from '@/lib/utils'
 import TeamBadge from '@/components/ui/TeamBadge'
 
@@ -43,7 +43,8 @@ export default function GameCard({ game }: Props) {
   const prices = Object.values(best).map((b) => b.price)
   const bestPrice = prices.length > 0 ? Math.max(...prices) : 0
 
-  const bestBookmaker = best[game.home_team]?.bookmaker as Bookmaker | undefined
+  // Usa a casa da melhor odd, ou a casa padrão se não houver regulamentada
+  const bestBookmaker: Bookmaker = (best[game.home_team]?.bookmaker as Bookmaker | undefined) ?? DEFAULT_BOOKMAKER
 
   return (
     <div className="card-hover rounded-xl border border-white/8 bg-card p-4 flex flex-col gap-3">
@@ -119,16 +120,14 @@ export default function GameCard({ game }: Props) {
         >
           Ver todas as odds →
         </Link>
-        {bestBookmaker && (
-          <a
-            href={getAffiliateLink(bestBookmaker, 'game-card')}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-            className="inline-flex items-center rounded-lg bg-green-500 hover:bg-green-400 text-black text-xs font-bold px-3 py-1.5 transition-colors neon-glow-sm"
-          >
-            Apostar
-          </a>
-        )}
+        <a
+          href={getAffiliateLink(bestBookmaker, 'game-card')}
+          target="_blank"
+          rel="noopener noreferrer nofollow sponsored"
+          className="inline-flex items-center rounded-lg bg-green-500 hover:bg-green-400 text-black text-xs font-bold px-3 py-1.5 transition-colors neon-glow-sm"
+        >
+          Apostar
+        </a>
       </div>
     </div>
   )

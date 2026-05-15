@@ -1,4 +1,5 @@
 import type { OddsGame } from '@/types'
+import { REGULATED_BR_BOOKMAKER_KEYS, DEFAULT_BOOKMAKER, type Bookmaker } from '@/lib/affiliates'
 
 const ODDS_API_BASE = 'https://api.the-odds-api.com/v4'
 
@@ -49,9 +50,17 @@ export async function getOdds(sport: SportKey = SPORTS.BRASILEIRAO_A): Promise<O
 }
 
 export function getBestOdds(game: OddsGame, market: 'h2h' | 'totals' = 'h2h') {
+  // Coleta apenas de casas regulamentadas no Brasil
+  const regulatedBookmakers = game.bookmakers.filter((b) =>
+    REGULATED_BR_BOOKMAKER_KEYS.has(b.key)
+  )
+
+  // Fallback: se nenhuma casa regulamentada tiver dados, usa todas mas marca como referência
+  const source = regulatedBookmakers.length > 0 ? regulatedBookmakers : game.bookmakers
+
   const allOutcomes: Record<string, { price: number; bookmaker: string }[]> = {}
 
-  for (const bookmaker of game.bookmakers) {
+  for (const bookmaker of source) {
     const mkt = bookmaker.markets.find((m) => m.key === market)
     if (!mkt) continue
 
@@ -61,9 +70,15 @@ export function getBestOdds(game: OddsGame, market: 'h2h' | 'totals' = 'h2h') {
     }
   }
 
-  const best: Record<string, { price: number; bookmaker: string }> = {}
+  const best: Record<string, { price: number; bookmaker: Bookmaker }> = {}
   for (const [name, prices] of Object.entries(allOutcomes)) {
-    best[name] = prices.reduce((a, b) => (a.price >= b.price ? a : b))
+    const top = prices.reduce((a, b) => (a.price >= b.price ? a : b))
+    best[name] = {
+      price: top.price,
+      bookmaker: REGULATED_BR_BOOKMAKER_KEYS.has(top.bookmaker)
+        ? (top.bookmaker as Bookmaker)
+        : DEFAULT_BOOKMAKER,
+    }
   }
 
   return best

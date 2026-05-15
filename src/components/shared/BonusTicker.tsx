@@ -43,6 +43,9 @@ export default function BonusTicker() {
                       {offer.badge}
                     </span>
                   )}
+                  <span className="rounded-full text-[8px] font-bold px-1.5 py-0.5 bg-green-500/10 text-green-400 border border-green-500/20 leading-none whitespace-nowrap">
+                    SPA
+                  </span>
                 </div>
                 <p className="text-lg font-extrabold text-green-400 leading-none whitespace-nowrap">
                   {offer.bonus}

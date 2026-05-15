@@ -72,6 +72,9 @@ export default function MelhoresBonusPage() {
                     {offer.badge}
                   </span>
                 )}
+                <span className="rounded-full bg-green-500/10 text-green-600 text-[10px] font-bold px-2.5 py-0.5 border border-green-500/20">
+                  ✓ Licenciada SPA/MF
+                </span>
               </div>
               <p className="text-2xl font-extrabold text-green-600">{offer.bonus}</p>
               <p className="text-sm text-muted-foreground">{offer.bonusDetail}</p>
