@@ -116,3 +116,75 @@ export async function getTeamLogoUrl(teamId: number): Promise<string | null> {
   const data = await fetchApi<{ url: string }>(`/football-team-logo?teamid=${teamId}`)
   return data?.url ?? null
 }
+
+export interface PlayerInfo {
+  id: number
+  name: string
+  age: number
+  shirtNumber: number
+  goals: number
+  assists: number
+  yellowCards: number
+  redCards: number
+  transferValue: string
+}
+
+export interface TeamSquad {
+  coach: PlayerInfo[]
+  keepers: PlayerInfo[]
+  defenders: PlayerInfo[]
+  midfielders: PlayerInfo[]
+  attackers: PlayerInfo[]
+}
+
+export interface TeamNewsItem {
+  title: string
+  imageUrl: string
+  gmtTime: string
+  url: string
+}
+
+export async function getTeamSquad(teamId: number): Promise<TeamSquad | null> {
+  const data = await fetchApi<{
+    coach?: Record<string, unknown>[]
+    keepers?: Record<string, unknown>[]
+    defenders?: Record<string, unknown>[]
+    midfielders?: Record<string, unknown>[]
+    attackers?: Record<string, unknown>[]
+  }>(`/football-get-list-player?teamid=${teamId}`)
+  if (!data) return null
+
+  const mapPlayer = (p: Record<string, unknown>): PlayerInfo => ({
+    id:            (p.id as number) ?? 0,
+    name:          (p.name as string) ?? '',
+    age:           (p.age as number) ?? 0,
+    shirtNumber:   (p.shirtNum as number) ?? 0,
+    goals:         (p.goals as number) ?? 0,
+    assists:       (p.assists as number) ?? 0,
+    yellowCards:   (p.yellowCards as number) ?? 0,
+    redCards:      (p.redCards as number) ?? 0,
+    transferValue: (p.transferValue as string) ?? '',
+  })
+
+  return {
+    coach:       (data.coach ?? []).map(mapPlayer),
+    keepers:     (data.keepers ?? []).map(mapPlayer),
+    defenders:   (data.defenders ?? []).map(mapPlayer),
+    midfielders: (data.midfielders ?? []).map(mapPlayer),
+    attackers:   (data.attackers ?? []).map(mapPlayer),
+  }
+}
+
+export async function getTeamNews(teamId: number): Promise<TeamNewsItem[]> {
+  const data = await fetchApi<{ news?: Record<string, unknown>[] }>(
+    `/football-get-team-news?teamid=${teamId}`
+  )
+  if (!data?.news) return []
+
+  return data.news.slice(0, 6).map((n) => ({
+    title:    (n.title as string) ?? '',
+    imageUrl: (n.imageUrl as string) ?? '',
+    gmtTime:  (n.gmtTime as string) ?? '',
+    url:      (n.url as string) ?? '',
+  }))
+}

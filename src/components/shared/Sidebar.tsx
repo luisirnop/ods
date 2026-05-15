@@ -44,8 +44,12 @@ const LEAGUES = [
 
 // ─── Times populares ─────────────────────────────────────────────────────────
 const POPULAR_TEAMS = [
-  'Flamengo', 'Palmeiras', 'Corinthians', 'São Paulo',
-  'Atlético-MG', 'Fluminense',
+  { name: 'Flamengo',    slug: 'flamengo'    },
+  { name: 'Palmeiras',   slug: 'palmeiras'   },
+  { name: 'Corinthians', slug: 'corinthians' },
+  { name: 'São Paulo',   slug: 'sao-paulo'   },
+  { name: 'Atlético-MG', slug: 'atletico-mg' },
+  { name: 'Fluminense',  slug: 'fluminense'  },
 ]
 
 // ─── Ferramentas ─────────────────────────────────────────────────────────────
@@ -220,12 +224,12 @@ export default async function Sidebar() {
         <div className="px-3 py-1 grid grid-cols-2 gap-1">
           {POPULAR_TEAMS.map((team) => (
             <Link
-              key={team}
-              href={`/odds?team=${encodeURIComponent(team)}`}
+              key={team.slug}
+              href={`/times/${team.slug}`}
               className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-xs text-muted-foreground hover:text-white hover:bg-white/5 transition-colors truncate"
             >
-              <TeamBadge team={team} size="xs" />
-              <span className="truncate">{team}</span>
+              <TeamBadge team={team.name} size="xs" />
+              <span className="truncate">{team.name}</span>
             </Link>
           ))}
         </div>
