@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import GameCard from '@/components/games/GameCard'
 import { MOCK_GAMES } from '@/lib/mock-data'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, hasSupabase } from '@/lib/supabase/server'
 import { getAdminClient } from '@/lib/supabase/admin'
 import { getLatestNews } from '@/lib/articles'
 import BonusTicker from '@/components/shared/BonusTicker'
@@ -24,22 +24,27 @@ const STATS = [
 ]
 
 export default async function HomePage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  let user: { id: string } | null = null
   let favoriteTeam: string | null = null
+
   const [latestNews, liveMatches] = await Promise.all([
-    getLatestNews(5),
+    getLatestNews(5).catch(() => []),
     getLiveMatches().catch(() => []),
     (async () => {
-      if (!user) return
-      const admin = getAdminClient()
-      const { data: profile } = await admin
-        .from('profiles')
-        .select('favorite_team')
-        .eq('id', user.id)
-        .single()
-      favoriteTeam = profile?.favorite_team ?? null
+      if (!hasSupabase()) return
+      try {
+        const supabase = await createClient()
+        const { data } = await supabase.auth.getUser()
+        user = data.user
+        if (!user) return
+        const admin = getAdminClient()
+        const { data: profile } = await admin
+          .from('profiles')
+          .select('favorite_team')
+          .eq('id', user.id)
+          .single()
+        favoriteTeam = profile?.favorite_team ?? null
+      } catch {}
     })(),
   ])
 
@@ -243,11 +248,13 @@ export default async function HomePage() {
           </Link>
         </section>
 
-        {/* Demo notice */}
-        <div className="rounded-xl border border-yellow-500/20 bg-yellow-500/5 px-4 py-3 text-xs text-yellow-500/80 flex items-center gap-2">
-          <Zap className="w-3.5 h-3.5 shrink-0" />
-          Exibindo dados de demonstração. Configure a chave da The Odds API para ver odds reais.
-        </div>
+        {/* Demo notice — só aparece em dev/staging sem a API key */}
+        {!process.env.THE_ODDS_API_KEY && process.env.NODE_ENV !== 'production' && (
+          <div className="rounded-xl border border-yellow-500/20 bg-yellow-500/5 px-4 py-3 text-xs text-yellow-500/80 flex items-center gap-2">
+            <Zap className="w-3.5 h-3.5 shrink-0" />
+            Exibindo dados de demonstração. Configure <code className="font-mono">THE_ODDS_API_KEY</code> para ver odds reais.
+          </div>
+        )}
       </div>
     </div>
   )

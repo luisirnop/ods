@@ -34,8 +34,8 @@ export async function getOdds(sport: SportKey = SPORTS.BRASILEIRAO_A): Promise<O
 
   const url = new URL(`${ODDS_API_BASE}/sports/${sport}/odds`)
   url.searchParams.set('apiKey', apiKey)
-  url.searchParams.set('regions', 'eu,uk')
-  url.searchParams.set('markets', 'h2h,totals')
+  url.searchParams.set('regions', 'br,eu,uk')
+  url.searchParams.set('markets', 'h2h,totals,btts')
   url.searchParams.set('oddsFormat', 'decimal')
 
   const response = await fetch(url.toString(), {

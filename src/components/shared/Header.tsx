@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, hasSupabase } from '@/lib/supabase/server'
 import { logout } from '@/actions/auth'
 import {
   BarChart3,
@@ -27,17 +27,23 @@ const NAV = [
 ]
 
 export default async function Header() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
+  let user: { id: string; email?: string } | null = null
   let profile: { display_name: string | null; username: string | null; is_premium: boolean } | null = null
-  if (user) {
-    const { data } = await supabase
-      .from('profiles')
-      .select('display_name, username, is_premium')
-      .eq('id', user.id)
-      .single()
-    profile = data
+
+  if (hasSupabase()) {
+    try {
+      const supabase = await createClient()
+      const { data } = await supabase.auth.getUser()
+      user = data.user
+      if (user) {
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('display_name, username, is_premium')
+          .eq('id', user.id)
+          .single()
+        profile = profileData
+      }
+    } catch {}
   }
 
   return (

@@ -84,4 +84,16 @@ export const BONUS_OFFERS: BonusOffer[] = [
     promoCode: 'ESTRELA300',
     regulatedBR: true,
   },
+  {
+    bookmakerKey: 'betway',
+    name: 'Betway',
+    bonus: 'Até R$400',
+    bonusDetail: '100% do 1º depósito até R$400',
+    minDeposit: 30,
+    rolloverTimes: 5,
+    rolloverOdds: 1.65,
+    highlight: 'Plataforma global com suporte local',
+    accentColor: '#00a651',
+    regulatedBR: true,
+  },
 ]

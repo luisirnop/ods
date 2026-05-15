@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, hasSupabase } from '@/lib/supabase/server'
 import { getAdminClient } from '@/lib/supabase/admin'
 import { MOCK_GAMES } from '@/lib/mock-data'
 import { getLiveMatches } from '@/lib/football-api'
@@ -104,40 +104,43 @@ function SidebarLink({
 
 // ─── Componente principal ────────────────────────────────────────────────────
 export default async function Sidebar() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  // Dados do perfil
+  let user: { id: string } | null = null
   let favoriteTeam: string | null = null
   let isFavoriteInLive = false
   let bolaoToken: string | null = null
 
-  if (user) {
-    const admin = getAdminClient()
-    const [profileRes, bolaoRes] = await Promise.all([
-      admin
-        .from('profiles')
-        .select('favorite_team')
-        .eq('id', user.id)
-        .single(),
-      admin
-        .from('world_cup_brackets')
-        .select('share_token')
-        .eq('user_id', user.id)
-        .single(),
-    ])
-    favoriteTeam = profileRes.data?.favorite_team ?? null
-    bolaoToken = bolaoRes.data?.share_token ?? null
+  if (hasSupabase()) {
+    try {
+      const supabase = await createClient()
+      const { data } = await supabase.auth.getUser()
+      user = data.user
 
-    if (favoriteTeam) {
-      isFavoriteInLive = MOCK_GAMES.some(
-        (g) =>
-          g.home_team.toLowerCase().includes(favoriteTeam!.toLowerCase()) ||
-          g.away_team.toLowerCase().includes(favoriteTeam!.toLowerCase())
-      )
-    }
+      if (user) {
+        const admin = getAdminClient()
+        const [profileRes, bolaoRes] = await Promise.all([
+          admin
+            .from('profiles')
+            .select('favorite_team')
+            .eq('id', user.id)
+            .single(),
+          admin
+            .from('world_cup_brackets')
+            .select('share_token')
+            .eq('user_id', user.id)
+            .single(),
+        ])
+        favoriteTeam = profileRes.data?.favorite_team ?? null
+        bolaoToken = bolaoRes.data?.share_token ?? null
+
+        if (favoriteTeam) {
+          isFavoriteInLive = MOCK_GAMES.some(
+            (g) =>
+              g.home_team.toLowerCase().includes(favoriteTeam!.toLowerCase()) ||
+              g.away_team.toLowerCase().includes(favoriteTeam!.toLowerCase())
+          )
+        }
+      }
+    } catch {}
   }
 
   // Jogos ao vivo reais via API (filtrados pelas ligas que cobrimos)
