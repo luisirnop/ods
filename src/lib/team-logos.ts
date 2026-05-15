@@ -5,54 +5,68 @@ export interface TeamBrand {
   logo?: string
 }
 
-// Logos de clubes via media.api-sports.io (CDN público, sem API key)
-// IDs: https://www.api-football.com/documentation-v3#tag/Teams
-const API_SPORTS = (id: number) =>
-  `https://media.api-sports.io/football/teams/${id}.png`
+// Logos via Fotmob (alta qualidade, mesmos IDs da football-api.ts)
+const FOTMOB = (id: number) =>
+  `https://images.fotmob.com/image_resources/logo/teamlogo/${id}_large.png`
 
 // Bandeiras nacionais via flagcdn.com
 const FLAG = (code: string) =>
   `https://flagcdn.com/w80/${code}.png`
 
 export const TEAM_BRANDS: Record<string, TeamBrand> = {
-  // ── Brasileirão ──────────────────────────────────────────────────────────
-  Flamengo:        { bg: '#E8000D', text: '#fff', short: 'FLA', logo: API_SPORTS(127)  },
-  Palmeiras:       { bg: '#006437', text: '#fff', short: 'PAL', logo: API_SPORTS(121)  },
-  Corinthians:     { bg: '#1a1a1a', text: '#fff', short: 'COR', logo: API_SPORTS(131)  },
-  'São Paulo':     { bg: '#CC0000', text: '#fff', short: 'SPF', logo: API_SPORTS(126)  },
-  'Atlético-MG':   { bg: '#000000', text: '#fff', short: 'CAM', logo: API_SPORTS(128)  },
-  Fluminense:      { bg: '#6B1E3C', text: '#fff', short: 'FLU', logo: API_SPORTS(130)  },
-  Internacional:   { bg: '#CC0000', text: '#fff', short: 'INT', logo: API_SPORTS(119)  },
-  Grêmio:          { bg: '#0533A0', text: '#fff', short: 'GRE', logo: API_SPORTS(120)  },
-  Botafogo:        { bg: '#1a1a1a', text: '#fff', short: 'BOT', logo: API_SPORTS(129)  },
-  Vasco:           { bg: '#1a1a1a', text: '#fff', short: 'VAS', logo: API_SPORTS(1062) },
-  Santos:          { bg: '#1a1a1a', text: '#fff', short: 'SAN', logo: API_SPORTS(137)  },
-  Cruzeiro:        { bg: '#0032A0', text: '#fff', short: 'CRU', logo: API_SPORTS(141)  },
-  Bahia:           { bg: '#003087', text: '#fff', short: 'BAH', logo: API_SPORTS(118)  },
-  Athletico:       { bg: '#CC0000', text: '#fff', short: 'CAP', logo: API_SPORTS(136)  },
-  Bragantino:      { bg: '#CC0000', text: '#fff', short: 'RBB', logo: API_SPORTS(10253)},
-  Fortaleza:       { bg: '#0033A0', text: '#fff', short: 'FOR', logo: API_SPORTS(134)  },
-  Goiás:           { bg: '#005522', text: '#fff', short: 'GOI', logo: API_SPORTS(133)  },
+  // ── Brasileirão (IDs reais do Fotmob) ────────────────────────────────────
+  Flamengo:              { bg: '#E8000D', text: '#fff', short: 'FLA', logo: FOTMOB(9770)   },
+  Palmeiras:             { bg: '#006437', text: '#fff', short: 'PAL', logo: FOTMOB(10283)  },
+  Corinthians:           { bg: '#1a1a1a', text: '#fff', short: 'COR', logo: FOTMOB(9808)   },
+  'São Paulo':           { bg: '#CC0000', text: '#fff', short: 'SPF', logo: FOTMOB(10277)  },
+  'Atlético-MG':         { bg: '#000000', text: '#fff', short: 'CAM', logo: FOTMOB(10272)  },
+  'Atletico MG':         { bg: '#000000', text: '#fff', short: 'CAM', logo: FOTMOB(10272)  },
+  Fluminense:            { bg: '#6B1E3C', text: '#fff', short: 'FLU', logo: FOTMOB(9863)   },
+  Internacional:         { bg: '#CC0000', text: '#fff', short: 'INT', logo: FOTMOB(8702)   },
+  Grêmio:                { bg: '#0533A0', text: '#fff', short: 'GRE', logo: FOTMOB(9769)   },
+  Gremio:                { bg: '#0533A0', text: '#fff', short: 'GRE', logo: FOTMOB(9769)   },
+  'Botafogo RJ':         { bg: '#1a1a1a', text: '#fff', short: 'BOT', logo: FOTMOB(8517)   },
+  Botafogo:              { bg: '#1a1a1a', text: '#fff', short: 'BOT', logo: FOTMOB(8517)   },
+  'Vasco da Gama':       { bg: '#1a1a1a', text: '#fff', short: 'VAS', logo: FOTMOB(10276)  },
+  Vasco:                 { bg: '#1a1a1a', text: '#fff', short: 'VAS', logo: FOTMOB(10276)  },
+  'Santos FC':           { bg: '#1a1a1a', text: '#fff', short: 'SAN', logo: FOTMOB(8514)   },
+  Santos:                { bg: '#1a1a1a', text: '#fff', short: 'SAN', logo: FOTMOB(8514)   },
+  Cruzeiro:              { bg: '#0032A0', text: '#fff', short: 'CRU', logo: FOTMOB(9781)   },
+  Bahia:                 { bg: '#003087', text: '#fff', short: 'BAH', logo: FOTMOB(7877)   },
+  'Athletico Paranaense':{ bg: '#CC0000', text: '#fff', short: 'CAP', logo: FOTMOB(10273)  },
+  'Atletico Paranaense': { bg: '#CC0000', text: '#fff', short: 'CAP', logo: FOTMOB(10273)  },
+  'Athletico PR':        { bg: '#CC0000', text: '#fff', short: 'CAP', logo: FOTMOB(10273)  },
+  'Red Bull Bragantino': { bg: '#CC0000', text: '#fff', short: 'RBB', logo: FOTMOB(109705) },
+  'Bragantino-SP':       { bg: '#CC0000', text: '#fff', short: 'RBB', logo: FOTMOB(109705) },
+  Bragantino:            { bg: '#CC0000', text: '#fff', short: 'RBB', logo: FOTMOB(109705) },
+  Coritiba:              { bg: '#005522', text: '#fff', short: 'CFC', logo: FOTMOB(9767)   },
+  Vitoria:               { bg: '#CC0000', text: '#fff', short: 'VIT', logo: FOTMOB(7733)   },
+  Vitória:               { bg: '#CC0000', text: '#fff', short: 'VIT', logo: FOTMOB(7733)   },
+  Mirassol:              { bg: '#FFD700', text: '#000', short: 'MIR', logo: FOTMOB(163782) },
+  Remo:                  { bg: '#003087', text: '#fff', short: 'REM', logo: FOTMOB(1626)   },
+  Chapecoense:           { bg: '#006437', text: '#fff', short: 'CHA', logo: FOTMOB(197693) },
+  'Chapecoense AF':      { bg: '#006437', text: '#fff', short: 'CHA', logo: FOTMOB(197693) },
+  Fortaleza:             { bg: '#0033A0', text: '#fff', short: 'FOR', logo: FOTMOB(8287)   },
 
   // ── Premier League ───────────────────────────────────────────────────────
-  Arsenal:              { bg: '#EF0107', text: '#fff', short: 'ARS', logo: API_SPORTS(42)  },
-  Chelsea:              { bg: '#034694', text: '#fff', short: 'CHE', logo: API_SPORTS(49)  },
-  Liverpool:            { bg: '#C8102E', text: '#fff', short: 'LIV', logo: API_SPORTS(40)  },
-  'Manchester City':    { bg: '#6CABDD', text: '#fff', short: 'MCI', logo: API_SPORTS(50)  },
-  'Manchester United':  { bg: '#DA291C', text: '#fff', short: 'MUN', logo: API_SPORTS(33)  },
-  Tottenham:            { bg: '#132257', text: '#fff', short: 'TOT', logo: API_SPORTS(47)  },
+  Arsenal:               { bg: '#EF0107', text: '#fff', short: 'ARS', logo: FOTMOB(9825)  },
+  Chelsea:               { bg: '#034694', text: '#fff', short: 'CHE', logo: FOTMOB(8455)  },
+  Liverpool:             { bg: '#C8102E', text: '#fff', short: 'LIV', logo: FOTMOB(8650)  },
+  'Manchester City':     { bg: '#6CABDD', text: '#fff', short: 'MCI', logo: FOTMOB(8456)  },
+  'Manchester United':   { bg: '#DA291C', text: '#fff', short: 'MUN', logo: FOTMOB(10260) },
+  Tottenham:             { bg: '#132257', text: '#fff', short: 'TOT', logo: FOTMOB(8586)  },
+  'Tottenham Hotspur':   { bg: '#132257', text: '#fff', short: 'TOT', logo: FOTMOB(8586)  },
 
   // ── La Liga / Champions ──────────────────────────────────────────────────
-  'Real Madrid':        { bg: '#FEBE10', text: '#00529F', short: 'RMA', logo: API_SPORTS(541) },
-  Barcelona:            { bg: '#A50044', text: '#fff',    short: 'BAR', logo: API_SPORTS(529) },
-  'Atlético Madrid':    { bg: '#CB3524', text: '#fff',    short: 'ATM', logo: API_SPORTS(530) },
+  'Real Madrid':         { bg: '#FEBE10', text: '#00529F', short: 'RMA', logo: FOTMOB(8633) },
+  Barcelona:             { bg: '#A50044', text: '#fff',    short: 'BAR', logo: FOTMOB(8634) },
+  'Atlético Madrid':     { bg: '#CB3524', text: '#fff',    short: 'ATM', logo: FOTMOB(9906) },
+  'Bayern München':      { bg: '#DC052D', text: '#fff',    short: 'BAY', logo: FOTMOB(9823) },
+  'Bayern Munchen':      { bg: '#DC052D', text: '#fff',    short: 'BAY', logo: FOTMOB(9823) },
 
   // ── Ligue 1 ──────────────────────────────────────────────────────────────
-  'Paris Saint-Germain': { bg: '#003087', text: '#fff', short: 'PSG', logo: API_SPORTS(85)  },
-
-  // ── Bundesliga ───────────────────────────────────────────────────────────
-  'Bayern Munich':  { bg: '#DC052D', text: '#fff', short: 'BAY', logo: API_SPORTS(157) },
-  Borussia:         { bg: '#FDE100', text: '#000', short: 'BVB', logo: API_SPORTS(165) },
+  'Paris Saint-Germain': { bg: '#003087', text: '#fff', short: 'PSG', logo: FOTMOB(8871) },
+  PSG:                   { bg: '#003087', text: '#fff', short: 'PSG', logo: FOTMOB(8871) },
 
   // ── Seleções nacionais (Copa 2026) ───────────────────────────────────────
   Brasil:           { bg: '#009C3B', text: '#FFDF00', short: 'BRA', logo: FLAG('br') },

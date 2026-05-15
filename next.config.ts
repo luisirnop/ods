@@ -28,6 +28,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'images.fotmob.com',
+      },
+      {
+        protocol: 'https',
         hostname: 'images.pexels.com',
       },
     ],
