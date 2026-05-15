@@ -58,3 +58,5 @@ coverage/
 # Misc
 *.log
 .cache/
+
+.vercel
