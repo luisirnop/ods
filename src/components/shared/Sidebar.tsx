@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { getAdminClient } from '@/lib/supabase/admin'
 import { MOCK_GAMES } from '@/lib/mock-data'
+import { getLiveMatches } from '@/lib/football-api'
+import { LEAGUES_CONFIG } from '@/lib/leagues'
 import TeamBadge from '@/components/ui/TeamBadge'
 import { SidebarPanel } from './SidebarPanel'
 import FavoritosGuestSection from './FavoritosGuestSection'
@@ -134,26 +136,33 @@ export default async function Sidebar() {
     }
   }
 
-  // Jogos "ao vivo" (simulado: jogo nas próximas 2h)
-  const liveGames = MOCK_GAMES.filter((g) => {
-    const start = new Date(g.commence_time).getTime()
-    const now = Date.now()
-    return now >= start - 2 * 60 * 60 * 1000 && now <= start + 105 * 60 * 1000
-  }).slice(0, 3)
+  // Jogos ao vivo reais via API (filtrados pelas ligas que cobrimos)
+  const knownLeagueIds = new Set(LEAGUES_CONFIG.map((l) => l.leagueId))
+  const allLive = await getLiveMatches().catch(() => [])
+  const liveGames = allLive.filter((m) => knownLeagueIds.has(m.leagueId)).slice(0, 5)
 
   return (
     <SidebarPanel>
       {/* ─── Ao vivo ─────────────────────────────── */}
       {liveGames.length > 0 && (
         <SidebarSection icon={Star} title="Ao vivo">
-          {liveGames.map((g) => (
-            <SidebarLink key={g.id} href={`/jogos/${g.id}`}>
-              <span className="live-dot w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
-              <span className="truncate text-xs">
-                {g.home_team} × {g.away_team}
-              </span>
-            </SidebarLink>
-          ))}
+          {liveGames.map((m) => {
+            const league = LEAGUES_CONFIG.find((l) => l.leagueId === m.leagueId)
+            return (
+              <SidebarLink
+                key={m.id}
+                href={league ? `/campeonatos/${league.slug}` : '/odds'}
+              >
+                <span className="live-dot w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
+                <span className="truncate text-xs flex-1">
+                  {m.home.name} × {m.away.name}
+                </span>
+                <span className="shrink-0 text-[10px] font-bold text-red-400 tabular-nums">
+                  {m.home.score}–{m.away.score}
+                </span>
+              </SidebarLink>
+            )
+          })}
         </SidebarSection>
       )}
 

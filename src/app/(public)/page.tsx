@@ -7,6 +7,8 @@ import { getAdminClient } from '@/lib/supabase/admin'
 import { getLatestNews } from '@/lib/articles'
 import BonusTicker from '@/components/shared/BonusTicker'
 import NewsCardsSection from '@/components/shared/NewsCardsSection'
+import LiveScoreWidget from '@/components/shared/LiveScoreWidget'
+import { getLiveMatches } from '@/lib/football-api'
 import { BarChart3, Zap, Trophy, TrendingUp, Newspaper } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -26,8 +28,9 @@ export default async function HomePage() {
   const { data: { user } } = await supabase.auth.getUser()
 
   let favoriteTeam: string | null = null
-  const [latestNews] = await Promise.all([
+  const [latestNews, liveMatches] = await Promise.all([
     getLatestNews(5),
+    getLiveMatches().catch(() => []),
     (async () => {
       if (!user) return
       const admin = getAdminClient()
@@ -119,6 +122,9 @@ export default async function HomePage() {
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-10">
         {/* Banner de bônus */}
         <BonusTicker />
+
+        {/* Live score */}
+        <LiveScoreWidget initial={liveMatches} />
 
         {/* Notícias da semana */}
         <NewsCardsSection />
