@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://oddsbr.com.br'
+
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
@@ -11,6 +13,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'OddsBR — Comparador de Odds em Tempo Real',
     template: '%s | OddsBR',
@@ -22,6 +25,11 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'pt_BR',
     siteName: 'OddsBR',
+    url: SITE_URL,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@oddsbr',
   },
 }
 

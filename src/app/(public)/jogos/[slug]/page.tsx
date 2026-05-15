@@ -91,16 +91,17 @@ export default async function JogoPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <section className="rounded-xl border bg-card p-6 space-y-4">
+        <h1 className="sr-only">{game.home_team} x {game.away_team}</h1>
         <div className="text-sm text-muted-foreground font-medium">{game.sport_title}</div>
         <div className="flex items-center justify-between gap-6">
-          <h1 className="text-2xl font-bold flex-1 text-left">{game.home_team}</h1>
+          <span className="text-2xl font-bold flex-1 text-left">{game.home_team}</span>
           <div className="text-center">
             <div className="text-3xl font-bold text-muted-foreground">×</div>
             <div className="text-xs text-muted-foreground mt-1">
               {formatDateTime(game.commence_time)}
             </div>
           </div>
-          <h1 className="text-2xl font-bold flex-1 text-right">{game.away_team}</h1>
+          <span className="text-2xl font-bold flex-1 text-right">{game.away_team}</span>
         </div>
 
         <div className="flex items-center justify-between pt-2 border-t">

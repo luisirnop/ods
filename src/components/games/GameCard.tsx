@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import type { OddsGame } from '@/types'
 import { getBestOdds } from '@/lib/odds-api'
-import { getAffiliateLink, DEFAULT_BOOKMAKER, type Bookmaker } from '@/lib/affiliates'
+import { getAffiliateLink, getBookmakerName, DEFAULT_BOOKMAKER, type Bookmaker } from '@/lib/affiliates'
 import { cn } from '@/lib/utils'
 import TeamBadge from '@/components/ui/TeamBadge'
 
@@ -126,7 +126,7 @@ export default function GameCard({ game }: Props) {
           rel="noopener noreferrer nofollow sponsored"
           className="inline-flex items-center rounded-lg bg-green-500 hover:bg-green-400 text-black text-xs font-bold px-3 py-1.5 transition-colors neon-glow-sm"
         >
-          Apostar
+          Apostar na {getBookmakerName(bestBookmaker)}
         </a>
       </div>
     </div>

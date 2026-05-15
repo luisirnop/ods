@@ -2,6 +2,31 @@ import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { getPredictions, getLikedPredictions, getFollowing } from '@/actions/palpites'
 import PredictionCard from '@/components/predictions/PredictionCard'
+import type { Market, PredictionResult } from '@/types'
+
+type PredictionRow = {
+  id: string
+  user_id: string
+  home_team: string
+  away_team: string
+  league: string
+  game_date: string
+  market: Market
+  prediction: string
+  confidence: number
+  justification: string | null
+  odds_at_time: number | null
+  result: PredictionResult | null
+  points_earned: number
+  likes_count: number
+  created_at: string
+  profiles: {
+    id: string
+    username: string | null
+    display_name: string | null
+    avatar_url: string | null
+  } | null
+}
 
 export const metadata: Metadata = {
   title: 'Palpites da Comunidade — OddsBR',
@@ -54,16 +79,12 @@ export default async function PalpitesPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {predictions.map((pred) => (
+          {(predictions as PredictionRow[]).map((pred) => (
             <PredictionCard
               key={pred.id}
-              prediction={pred as any}
+              prediction={pred}
               isLiked={likedIds.includes(pred.id)}
-              isFollowing={
-                pred.profiles
-                  ? followingIds.includes((pred.profiles as any).id)
-                  : false
-              }
+              isFollowing={pred.profiles ? followingIds.includes(pred.profiles.id) : false}
               currentUserId={user?.id ?? null}
             />
           ))}

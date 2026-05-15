@@ -1,30 +1,9 @@
 import Link from 'next/link'
 import { createClient, hasSupabase } from '@/lib/supabase/server'
 import { logout } from '@/actions/auth'
-import {
-  BarChart3,
-  Trophy,
-  Newspaper,
-  BookOpen,
-  Gift,
-  Calculator,
-  Brain,
-  Zap,
-  User,
-  LogOut,
-} from 'lucide-react'
+import { Zap, User, LogOut } from 'lucide-react'
 import { SidebarToggleBtn } from './SidebarPanel'
-
-const NAV = [
-  { href: '/odds',        label: 'Comparador',  icon: BarChart3 },
-  { href: '/palpites',    label: 'Palpites',    icon: Trophy },
-  { href: '/ranking',     label: 'Ranking',     icon: Trophy },
-  { href: '/noticias',    label: 'Notícias',    icon: Newspaper },
-  { href: '/guias',       label: 'Guias',       icon: BookOpen },
-  { href: '/melhores-bonus', label: 'Bônus',   icon: Gift },
-  { href: '/calculadora', label: 'Calculadora', icon: Calculator },
-  { href: '/quiz',        label: 'Quiz',        icon: Brain },
-]
+import NavLinks from './NavLinks'
 
 export default async function Header() {
   let user: { id: string; email?: string } | null = null
@@ -63,19 +42,8 @@ export default async function Header() {
           </span>
         </Link>
 
-        {/* Nav — desktop (menos itens, a sidebar cobre o resto) */}
-        <nav className="hidden lg:flex items-center gap-0.5 flex-1">
-          {NAV.map(({ href, label, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-            >
-              <Icon className="w-3.5 h-3.5" />
-              {label}
-            </Link>
-          ))}
-        </nav>
+        {/* Nav — desktop (active state via NavLinks client component) */}
+        <NavLinks />
 
         {/* Right area */}
         <div className="flex items-center gap-2 ml-auto shrink-0">
