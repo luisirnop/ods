@@ -27,17 +27,17 @@ const FOTMOB_LEAGUE = (id: number) =>
 
 // ─── Campeonatos ────────────────────────────────────────────────────────────
 const LEAGUES = [
-  { label: 'Brasileirão Série A', logo: FOTMOB_LEAGUE(268), href: '/brasileirao'                                },
-  { label: 'Brasileirão Série B', logo: FOTMOB_LEAGUE(8814),href: '/odds?sport=soccer_brazil_serie_b'            },
-  { label: 'Libertadores',        logo: FOTMOB_LEAGUE(45),  href: '/odds?sport=soccer_conmebol_copa_libertadores' },
-  { label: 'Sul-Americana',       logo: FOTMOB_LEAGUE(299), href: '/odds?sport=soccer_conmebol_copa_sudamericana' },
-  { label: 'Premier League',      logo: FOTMOB_LEAGUE(47),  href: '/odds?sport=soccer_epl'                       },
-  { label: 'Champions League',    logo: FOTMOB_LEAGUE(42),  href: '/odds?sport=soccer_uefa_champs_league'        },
-  { label: 'Europa League',       logo: FOTMOB_LEAGUE(73),  href: '/odds?sport=soccer_uefa_europa_league'        },
-  { label: 'La Liga',             logo: FOTMOB_LEAGUE(87),  href: '/odds?sport=soccer_spain_la_liga'             },
-  { label: 'Serie A',             logo: FOTMOB_LEAGUE(55),  href: '/odds?sport=soccer_italy_serie_a'             },
-  { label: 'Bundesliga',          logo: FOTMOB_LEAGUE(54),  href: '/odds?sport=soccer_germany_bundesliga'        },
-  { label: 'Copa 2026',           logo: FOTMOB_LEAGUE(77),  href: '/copa-2026'                                   },
+  { label: 'Brasileirão Série A', logo: FOTMOB_LEAGUE(268),  href: '/campeonatos/brasileirao-a' },
+  { label: 'Brasileirão Série B', logo: FOTMOB_LEAGUE(8814), href: '/campeonatos/brasileirao-b' },
+  { label: 'Libertadores',        logo: FOTMOB_LEAGUE(45),   href: '/campeonatos/libertadores'  },
+  { label: 'Sul-Americana',       logo: FOTMOB_LEAGUE(299),  href: '/campeonatos/sul-americana' },
+  { label: 'Premier League',      logo: FOTMOB_LEAGUE(47),   href: '/campeonatos/premier-league'},
+  { label: 'Champions League',    logo: FOTMOB_LEAGUE(42),   href: '/campeonatos/champions'     },
+  { label: 'Europa League',       logo: FOTMOB_LEAGUE(73),   href: '/campeonatos/europa-league' },
+  { label: 'La Liga',             logo: FOTMOB_LEAGUE(87),   href: '/campeonatos/la-liga'       },
+  { label: 'Serie A',             logo: FOTMOB_LEAGUE(55),   href: '/campeonatos/serie-a'       },
+  { label: 'Bundesliga',          logo: FOTMOB_LEAGUE(54),   href: '/campeonatos/bundesliga'    },
+  { label: 'Copa 2026',           logo: FOTMOB_LEAGUE(77),   href: '/copa-2026'                 },
 ]
 
 // ─── Times populares ─────────────────────────────────────────────────────────
