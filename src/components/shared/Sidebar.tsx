@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { getAdminClient } from '@/lib/supabase/admin'
@@ -20,15 +21,23 @@ import {
   Globe,
 } from 'lucide-react'
 
+// IDs das ligas em api-sports.io (CDN público, sem auth)
+const API_LEAGUE = (id: number) =>
+  `https://media.api-sports.io/football/leagues/${id}.png`
+
 // ─── Campeonatos ────────────────────────────────────────────────────────────
 const LEAGUES = [
-  { label: 'Brasileirão Série A', icon: '🇧🇷', href: '/odds?sport=brasileirao_a'  },
-  { label: 'Brasileirão Série B', icon: '🇧🇷', href: '/odds?sport=brasileirao_b'  },
-  { label: 'Copa do Brasil',       icon: '🏆', href: '/odds?sport=copa_brasil'    },
-  { label: 'Libertadores',         icon: '🌎', href: '/odds?sport=libertadores'   },
-  { label: 'Premier League',       icon: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', href: '/odds?sport=premier_league' },
-  { label: 'Champions League',     icon: '⭐', href: '/odds?sport=champions'      },
-  { label: 'Copa 2026',            icon: '🌐', href: '/copa-2026'                 },
+  { label: 'Brasileirão Série A', logo: API_LEAGUE(71),  href: '/odds?sport=soccer_brazil_campeonato'          },
+  { label: 'Brasileirão Série B', logo: API_LEAGUE(72),  href: '/odds?sport=soccer_brazil_serie_b'             },
+  { label: 'Libertadores',        logo: API_LEAGUE(13),  href: '/odds?sport=soccer_conmebol_copa_libertadores'  },
+  { label: 'Sul-Americana',       logo: API_LEAGUE(11),  href: '/odds?sport=soccer_conmebol_copa_sudamericana'  },
+  { label: 'Premier League',      logo: API_LEAGUE(39),  href: '/odds?sport=soccer_epl'                        },
+  { label: 'Champions League',    logo: API_LEAGUE(2),   href: '/odds?sport=soccer_uefa_champs_league'         },
+  { label: 'Europa League',       logo: API_LEAGUE(3),   href: '/odds?sport=soccer_uefa_europa_league'         },
+  { label: 'La Liga',             logo: API_LEAGUE(140), href: '/odds?sport=soccer_spain_la_liga'              },
+  { label: 'Serie A',             logo: API_LEAGUE(135), href: '/odds?sport=soccer_italy_serie_a'              },
+  { label: 'Bundesliga',          logo: API_LEAGUE(78),  href: '/odds?sport=soccer_germany_bundesliga'         },
+  { label: 'Copa 2026',           logo: API_LEAGUE(1),   href: '/copa-2026'                                    },
 ]
 
 // ─── Times populares ─────────────────────────────────────────────────────────
@@ -152,7 +161,16 @@ export default async function Sidebar() {
       <SidebarSection icon={Globe} title="Campeonatos">
         {LEAGUES.map((l) => (
           <SidebarLink key={l.href} href={l.href}>
-            <span className="text-base leading-none w-4 text-center shrink-0">{l.icon}</span>
+            <span className="w-6 h-6 shrink-0 flex items-center justify-center rounded bg-white/90 p-0.5">
+              <Image
+                src={l.logo}
+                alt={l.label}
+                width={20}
+                height={20}
+                className="object-contain w-full h-full"
+                unoptimized
+              />
+            </span>
             <span className="truncate">{l.label}</span>
           </SidebarLink>
         ))}

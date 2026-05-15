@@ -6,7 +6,7 @@ const CACHE_SECONDS = 300 // 5 minutos
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const sport = searchParams.get('sport') ?? 'soccer_brazil_campeonato'
-  const regions = searchParams.get('regions') ?? 'br,eu'
+  const regions = searchParams.get('regions') ?? 'eu,uk'
   const markets = searchParams.get('markets') ?? 'h2h,totals'
 
   const apiKey = process.env.THE_ODDS_API_KEY
