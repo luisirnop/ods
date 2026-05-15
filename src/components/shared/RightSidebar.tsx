@@ -29,7 +29,7 @@ export default function RightSidebar() {
     <aside
       className={[
         'hidden xl:flex flex-col',
-        'w-[280px] shrink-0',
+        'w-[320px] shrink-0',
         'sticky top-14 h-[calc(100vh-3.5rem)]',
         'overflow-y-auto no-scrollbar',
         'border-l border-white/5',
