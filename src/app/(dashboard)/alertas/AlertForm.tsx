@@ -50,7 +50,7 @@ export default function AlertForm({ atLimit }: Props) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 rounded-lg bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2.5 text-sm transition-colors"
+        className="inline-flex items-center gap-2 rounded-lg bg-green-500 hover:bg-green-600 text-black font-semibold px-4 py-2.5 text-sm transition-colors"
       >
         + Novo alerta
       </button>
@@ -166,7 +166,7 @@ export default function AlertForm({ atLimit }: Props) {
               <button
                 type="submit"
                 disabled={pending}
-                className="w-full rounded-lg bg-green-500 hover:bg-green-600 disabled:opacity-60 text-white font-semibold py-2.5 text-sm transition-colors"
+                className="w-full rounded-lg bg-green-500 hover:bg-green-600 disabled:opacity-60 text-black font-semibold py-2.5 text-sm transition-colors"
               >
                 {pending ? 'Criando...' : 'Criar alerta'}
               </button>

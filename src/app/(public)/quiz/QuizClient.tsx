@@ -228,7 +228,7 @@ export default function QuizClient({ questions, existingAnswer, quizDate, isLogg
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-lg bg-green-500 hover:bg-green-600 disabled:opacity-60 text-white font-semibold py-3 text-sm transition-colors"
+          className="w-full rounded-lg bg-green-500 hover:bg-green-600 disabled:opacity-60 text-black font-semibold py-3 text-sm transition-colors"
         >
           {pending ? 'Enviando...' : 'Enviar respostas'}
         </button>

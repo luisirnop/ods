@@ -103,7 +103,7 @@ export default function MelhoresBonusPage() {
                 href={`/api/click/${offer.bookmakerKey}?source=melhores-bonus&variant=a`}
                 target="_blank"
                 rel="noopener noreferrer nofollow sponsored"
-                className="inline-flex items-center rounded-xl bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 text-sm font-semibold transition-colors whitespace-nowrap"
+                className="inline-flex items-center rounded-xl bg-green-500 hover:bg-green-600 text-black px-5 py-2.5 text-sm font-semibold transition-colors whitespace-nowrap"
               >
                 Resgatar bônus →
               </a>

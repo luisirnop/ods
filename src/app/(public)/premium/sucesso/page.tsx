@@ -32,7 +32,7 @@ export default function PremiumSucessoPage() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/odds"
-            className="inline-flex items-center justify-center rounded-xl bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 text-sm font-semibold transition-colors"
+            className="inline-flex items-center justify-center rounded-xl bg-green-500 hover:bg-green-600 text-black px-5 py-2.5 text-sm font-semibold transition-colors"
           >
             Ver value bets agora →
           </Link>

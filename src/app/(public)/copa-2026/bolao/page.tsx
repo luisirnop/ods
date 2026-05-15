@@ -25,7 +25,7 @@ export default async function BolaoPage() {
         <div className="flex gap-3 justify-center">
           <Link
             href="/cadastro?next=/copa-2026/bolao"
-            className="inline-flex items-center rounded-xl bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 text-sm font-semibold transition-colors"
+            className="inline-flex items-center rounded-xl bg-green-500 hover:bg-green-600 text-black px-5 py-2.5 text-sm font-semibold transition-colors"
           >
             Criar conta →
           </Link>

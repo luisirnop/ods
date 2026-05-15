@@ -74,7 +74,7 @@ export default async function CopaRankingPage() {
         <p className="text-sm font-medium text-green-600">Ainda não fez seu bolão?</p>
         <Link
           href="/copa-2026/bolao"
-          className="text-xs font-semibold bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
+          className="text-xs font-semibold bg-green-500 hover:bg-green-600 text-black px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
         >
           Criar bolão →
         </Link>

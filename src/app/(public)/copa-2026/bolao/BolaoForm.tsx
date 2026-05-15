@@ -190,7 +190,7 @@ export default function BolaoForm({ existing }: Props) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-xl bg-green-500 hover:bg-green-600 disabled:opacity-60 text-white py-3 text-sm font-bold transition-colors"
+        className="w-full rounded-xl bg-green-500 hover:bg-green-600 disabled:opacity-60 text-black py-3 text-sm font-bold transition-colors"
       >
         {isPending
           ? 'Salvando…'

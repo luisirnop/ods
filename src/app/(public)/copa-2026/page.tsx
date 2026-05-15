@@ -137,7 +137,7 @@ export default async function Copa2026Page() {
         </div>
         <Link
           href="/copa-2026/bolao"
-          className="inline-flex items-center rounded-xl bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 text-sm font-semibold transition-colors whitespace-nowrap"
+          className="inline-flex items-center rounded-xl bg-green-500 hover:bg-green-600 text-black px-5 py-2.5 text-sm font-semibold transition-colors whitespace-nowrap"
         >
           Fazer meu bolão →
         </Link>

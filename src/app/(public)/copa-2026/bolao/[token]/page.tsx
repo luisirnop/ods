@@ -151,7 +151,7 @@ export default async function BolaoSharedPage({ params }: Props) {
         ) : (
           <Link
             href="/copa-2026/bolao"
-            className="w-full text-center rounded-xl bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 text-sm font-bold transition-colors"
+            className="w-full text-center rounded-xl bg-green-500 hover:bg-green-600 text-black px-5 py-2.5 text-sm font-bold transition-colors"
           >
             Fazer meu bolão →
           </Link>

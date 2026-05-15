@@ -129,7 +129,7 @@ export default async function PremiumPage() {
               <form action={createCheckoutSession}>
                 <button
                   type="submit"
-                  className="w-full rounded-xl bg-green-500 hover:bg-green-600 text-white px-4 py-2.5 text-sm font-semibold transition-colors"
+                  className="w-full rounded-xl bg-green-500 hover:bg-green-600 text-black px-4 py-2.5 text-sm font-semibold transition-colors"
                 >
                   {user ? 'Assinar agora →' : 'Criar conta e assinar →'}
                 </button>

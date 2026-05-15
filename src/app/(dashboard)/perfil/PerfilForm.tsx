@@ -76,7 +76,7 @@ export default function PerfilForm({ profile, userId }: Props) {
       <button
         type="submit"
         disabled={pending}
-        className="rounded-lg bg-green-500 hover:bg-green-600 disabled:opacity-60 text-white font-semibold px-5 py-2.5 text-sm transition-colors"
+        className="rounded-lg bg-green-500 hover:bg-green-600 disabled:opacity-60 text-black font-semibold px-5 py-2.5 text-sm transition-colors"
       >
         {pending ? 'Salvando...' : 'Salvar alterações'}
       </button>

@@ -170,7 +170,7 @@ export default async function ArticlePage({ params }: Props) {
           <div className="flex gap-3">
             <Link
               href="/odds"
-              className="inline-flex items-center rounded-lg bg-green-500 hover:bg-green-600 text-white px-4 py-2 text-sm font-semibold transition-colors"
+              className="inline-flex items-center rounded-lg bg-green-500 hover:bg-green-600 text-black px-4 py-2 text-sm font-semibold transition-colors"
             >
               Comparar odds →
             </Link>

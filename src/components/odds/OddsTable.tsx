@@ -165,7 +165,7 @@ export default function OddsTable({
                       )}
                       target="_blank"
                       rel="noopener noreferrer nofollow sponsored"
-                      className="inline-flex items-center rounded-lg bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-3 py-1.5 transition-colors"
+                      className="inline-flex items-center rounded-lg bg-green-500 hover:bg-green-600 text-black text-xs font-semibold px-3 py-1.5 transition-colors"
                     >
                       Apostar
                     </a>

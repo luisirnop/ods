@@ -457,7 +457,7 @@ export default function CalculadoraClient({ isLoggedIn }: { isLoggedIn: boolean 
             </div>
             <button
               onClick={addBet}
-              className="rounded-lg bg-green-500 hover:bg-green-600 text-white px-4 py-2 text-sm font-semibold transition-colors"
+              className="rounded-lg bg-green-500 hover:bg-green-600 text-black px-4 py-2 text-sm font-semibold transition-colors"
             >
               Adicionar aposta
             </button>
